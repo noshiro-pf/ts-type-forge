@@ -58,7 +58,7 @@
     "update-packages": "npx npm-check-updates -u --install always"
   },
   "devDependencies": {
-    "@octokit/core": "^7.0.3",
+    "@octokit/core": "^7.0.5",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/commit-analyzer": "^13.0.1",
     "@semantic-release/exec": "^7.1.0",
