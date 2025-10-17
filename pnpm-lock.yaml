@@ -33,7 +33,7 @@ importers:
         specifier: ^14.1.0
         version: 14.1.0(semantic-release@25.0.0(typescript@5.9.3))
       '@types/node':
-        specifier: ^24.8.0
+        specifier: ^24.8.1
         version: 24.8.1
       conventional-changelog-conventionalcommits:
         specifier: ^9.1.0
@@ -45,7 +45,7 @@ importers:
         specifier: ^9.37.0
         version: 9.37.0
       eslint-config-typed:
-        specifier: ^1.7.0
+        specifier: ^1.7.1
         version: 1.7.1(typescript@5.9.3)
       fast-glob:
         specifier: ^3.3.3
