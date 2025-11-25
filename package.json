@@ -38,6 +38,8 @@
     "cspell": "cspell \"**\" --gitignore --gitignore-root ./ --no-progress",
     "doc": "tsx ./scripts/cmd/gen-docs.mts",
     "doc:embed": "tsx ./scripts/cmd/embed-samples.mts",
+    "doc:preview": "vite preview --config ./configs/vite.doc.config.ts",
+    "doc:watch": "typedoc --options ./configs/typedoc.config.mjs --watch",
     "fmt": "format-uncommitted",
     "fmt:diff": "format-diff-from origin/main",
     "fmt:full": "prettier --write .",
