@@ -1,7 +1,7 @@
 import {
   type TSTypeForgeInternals_BrandedNumberBaseType,
   type TSTypeForgeInternals_ExtendNumberBrand,
-} from './_internals.mjs';
+} from './_number-brand-internals.mjs';
 import { type IntersectBrand } from './brand.mjs';
 
 /*
