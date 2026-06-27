@@ -7,7 +7,7 @@ import {
 } from './brand.mjs';
 
 /** Recognized boolean keys for numeric brands. */
-export type NumberBrandKey =
+type NumberBrandKey =
   | '!=0'
   | '< 2^15'
   | '< 2^16'
@@ -18,6 +18,7 @@ export type NumberBrandKey =
   | '>= -2^15'
   | '>= -2^31'
   | '>=0'
+  | '<=0'
   | 'Finite'
   | 'Float32'
   | 'Float64'

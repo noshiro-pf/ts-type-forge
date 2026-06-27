@@ -3,6 +3,7 @@ import { type IntersectBrand } from './brand.mjs';
 import {
   type NegativeNumber,
   type NonNegativeNumber,
+  type NonPositiveNumber,
   type NonZeroNumber,
   type PositiveNumber,
   type ValidNumber,
@@ -151,3 +152,20 @@ export type NegativeFiniteNumber = IntersectBrand<NegativeNumber, FiniteNumber>;
  * ```
  */
 export type NonZeroFiniteNumber = IntersectBrand<NonZeroNumber, FiniteNumber>;
+
+/**
+ * Branded numeric type for finite non-positive numbers.
+ * Represents finite values less than or equal to zero.
+ *
+ * @example
+ * ```ts
+ * const isNonPositiveFinite = (x: number): x is NonPositiveFiniteNumber =>
+ *   Number.isFinite(x) && x <= 0;
+ *
+ * const debt = (amount: NonPositiveFiniteNumber) => ({ debt: amount });
+ * ```
+ */
+export type NonPositiveFiniteNumber = IntersectBrand<
+  NonPositiveNumber,
+  FiniteNumber
+>;
