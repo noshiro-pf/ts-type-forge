@@ -98,6 +98,16 @@ declare global {
   type NonNegativeInt32WithSmallInt = _TSTypeForge.NonNegativeInt32WithSmallInt;
   type PositiveInt32WithSmallInt = _TSTypeForge.PositiveInt32WithSmallInt;
   type NegativeInt32WithSmallInt = _TSTypeForge.NegativeInt32WithSmallInt;
+  type MaxLengthString<MaxLength extends number> =
+    _TSTypeForge.MaxLengthString<MaxLength>;
+  type MinLengthString<MinLength extends number> =
+    _TSTypeForge.MinLengthString<MinLength>;
+  type BoundedLengthString<
+    MinLength extends number,
+    MaxLength extends number,
+  > = _TSTypeForge.BoundedLengthString<MinLength, MaxLength>;
+  type FixedLengthString<Length extends number> =
+    _TSTypeForge.FixedLengthString<Length>;
   type NonEmptyString = _TSTypeForge.NonEmptyString;
   type SafeInt = _TSTypeForge.SafeInt;
   type NonZeroSafeInt = _TSTypeForge.NonZeroSafeInt;

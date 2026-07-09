@@ -544,8 +544,13 @@ For detailed information on all types, see the [Full API Reference](./docs/READM
     - [NonNegativeInt32WithSmallInt](./src/branded-types/int32.mts#L103)
     - [PositiveInt32WithSmallInt](./src/branded-types/int32.mts#L109)
     - [NegativeInt32WithSmallInt](./src/branded-types/int32.mts#L115)
+- src/branded-types/length-constrained-string.mts
+    - [MaxLengthString](./src/branded-types/length-constrained-string.mts#L31)
+    - [MinLengthString](./src/branded-types/length-constrained-string.mts#L64)
+    - [BoundedLengthString](./src/branded-types/length-constrained-string.mts#L94)
+    - [FixedLengthString](./src/branded-types/length-constrained-string.mts#L115)
 - src/branded-types/non-empty-string.mts
-    - [NonEmptyString](./src/branded-types/non-empty-string.mts#L3)
+    - [NonEmptyString](./src/branded-types/non-empty-string.mts#L20)
 - src/branded-types/safe-int.mts
     - [SafeInt](./src/branded-types/safe-int.mts#L29)
     - [NonZeroSafeInt](./src/branded-types/safe-int.mts#L44)

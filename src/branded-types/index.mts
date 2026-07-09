@@ -8,6 +8,7 @@ export * from './float.mjs';
 export * from './int.mjs';
 export * from './int16.mjs';
 export * from './int32.mjs';
+export * from './length-constrained-string.mjs';
 export * from './non-empty-string.mjs';
 export * from './safe-int.mjs';
 export * from './small-int.mjs';
