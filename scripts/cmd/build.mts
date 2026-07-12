@@ -58,7 +58,7 @@ const build = async (skipCheck: boolean): Promise<void> => {
     await logStep({
       startMessage: 'Running type checking',
       action: () =>
-        runCmdStep(`node ${nativeTsc} --noEmit`, 'Type checking failed'),
+        runCmdStep(`node "${nativeTsc}" --noEmit`, 'Type checking failed'),
       successMessage: 'Type checking passed',
     });
   }
@@ -82,7 +82,7 @@ const build = async (skipCheck: boolean): Promise<void> => {
     startMessage: 'Emitting declarations with tsc',
     action: () =>
       runCmdStep(
-        `node ${nativeTsc} -p ./configs/tsconfig.build.json`,
+        `node "${nativeTsc}" -p ./configs/tsconfig.build.json`,
         'Declaration emit failed',
       ),
     successMessage: 'Declaration emit completed',
