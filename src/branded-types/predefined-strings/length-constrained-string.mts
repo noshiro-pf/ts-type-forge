@@ -1,4 +1,4 @@
-import { type ArrayAtLeastLen } from '../../tuple-and-list/index.mjs';
+import { type MinLengthTuple } from '../../tuple-and-list/index.mjs';
 import { type UintRangeInclusive } from '../../type-level-integer/index.mjs';
 import { type TSTypeForgeInternals_BrandEncapsulated } from '../_internals.mjs';
 
@@ -64,7 +64,7 @@ export type MaxLengthString<MaxLength extends number> = string &
 export type MinLengthString<MinLength extends number> = string &
   TSTypeForgeInternals_BrandEncapsulated<
     Readonly<{
-      MinLength: ArrayAtLeastLen<MinLength, 0>;
+      MinLength: MinLengthTuple<MinLength, 0>;
     }>
   >;
 

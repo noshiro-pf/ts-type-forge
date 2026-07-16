@@ -39,7 +39,7 @@ export type NonEmptyArray<A> = readonly [A, ...(readonly A[])];
  */
 export type ArrayElement<S> = S extends readonly (infer T)[] ? T : never;
 
-/* ArrayOfLength */
+/* FixedLengthTuple */
 
 /**
  * Creates a readonly tuple type of a specific length `N` with elements of type `Elm`.
@@ -48,10 +48,10 @@ export type ArrayElement<S> = S extends readonly (infer T)[] ? T : never;
  * @template Elm - The type of elements in the tuple.
  * @returns A readonly tuple type `readonly [Elm, Elm, ..., Elm]` of length `N`.
  * @example
- * type TupleOf3Strings = ArrayOfLength<3, string>; // readonly [string, string, string]
- * type TupleOf0Numbers = ArrayOfLength<0, number>; // readonly []
+ * type TupleOf3Strings = FixedLengthTuple<3, string>; // readonly [string, string, string]
+ * type TupleOf0Numbers = FixedLengthTuple<0, number>; // readonly []
  */
-export type ArrayOfLength<N extends number, Elm> = MakeTuple<Elm, N>;
+export type FixedLengthTuple<N extends number, Elm> = MakeTuple<Elm, N>;
 
 /**
  * Creates a mutable tuple type of a specific length `N` with elements of type `Elm`.
@@ -59,13 +59,13 @@ export type ArrayOfLength<N extends number, Elm> = MakeTuple<Elm, N>;
  * @template Elm - The type of elements in the tuple.
  * @returns A mutable tuple type `[Elm, Elm, ..., Elm]` of length `N`.
  * @example
- * type MutableTupleOf2Booleans = MutableArrayOfLength<2, boolean>; // [boolean, boolean]
+ * type MutableTupleOf2Booleans = MutableFixedLengthTuple<2, boolean>; // [boolean, boolean]
  */
-export type MutableArrayOfLength<N extends number, Elm> = Mutable<
-  ArrayOfLength<N, Elm>
+export type MutableFixedLengthTuple<N extends number, Elm> = Mutable<
+  FixedLengthTuple<N, Elm>
 >;
 
-/* ArrayAtLeastLen */
+/* MinLengthTuple */
 
 // https://qiita.com/uhyo/items/80ce7c00f413c1d1be56
 
@@ -75,13 +75,13 @@ export type MutableArrayOfLength<N extends number, Elm> = Mutable<
  * @template Elm - The type of elements in the array.
  * @returns A mutable array type `[Elm, ..., Elm, ...Elm[]]` with at least `N` elements.
  * @example
- * type AtLeast2Numbers = MutableArrayAtLeastLen<2, number>; // [number, number, ...number[]]
+ * type AtLeast2Numbers = MutableMinLengthTuple<2, number>; // [number, number, ...number[]]
  * const valid: AtLeast2Numbers = [1, 2];
  * const alsoValid: AtLeast2Numbers = [1, 2, 3, 4];
  * // const invalid: AtLeast2Numbers = [1]; // Error
  */
-export type MutableArrayAtLeastLen<N extends number, Elm> = Mutable<
-  ArrayAtLeastLen<N, Elm>
+export type MutableMinLengthTuple<N extends number, Elm> = Mutable<
+  MinLengthTuple<N, Elm>
 >;
 
 /**
@@ -90,17 +90,17 @@ export type MutableArrayAtLeastLen<N extends number, Elm> = Mutable<
  * @template Elm - The type of elements in the array.
  * @returns A readonly array type `readonly [Elm, ..., Elm, ...Elm[]]` with at least `N` elements.
  * @example
- * type AtLeast3Strings = ArrayAtLeastLen<3, string>; // readonly [string, string, string, ...string[]]
+ * type AtLeast3Strings = MinLengthTuple<3, string>; // readonly [string, string, string, ...string[]]
  * const valid: AtLeast3Strings = ["a", "b", "c"];
  * const alsoValid: AtLeast3Strings = ["a", "b", "c", "d"];
  * // const invalid: AtLeast3Strings = ["a", "b"]; // Error
  */
-export type ArrayAtLeastLen<N extends number, Elm> = readonly [
+export type MinLengthTuple<N extends number, Elm> = readonly [
   ...MakeTuple<Elm, N>,
   ...Elm[],
 ];
 
-/* ArrayBoundedLen */
+/* BoundedLengthTuple */
 
 /**
  * @internal
@@ -135,40 +135,40 @@ type TuplePrefixesDownTo<
  * @template Elm - The type of elements in the tuple.
  * @returns A union of readonly tuples whose lengths range from `Min` to `Max`.
  * @example
- * type T = ArrayBoundedLen<1, 3, string>;
+ * type T = BoundedLengthTuple<1, 3, string>;
  * // readonly [string] | readonly [string, string] | readonly [string, string, string]
  * const a: T = ["a"]; // ok
  * const b: T = ["a", "b", "c"]; // ok
  * // const c: T = []; // Error
  * // const d: T = ["a", "b", "c", "d"]; // Error
  */
-export type ArrayBoundedLen<
+export type BoundedLengthTuple<
   Min extends number,
   Max extends number,
   Elm,
 > = TuplePrefixesDownTo<MakeTuple<Elm, Max>, Min>;
 
 /**
- * Mutable version of {@link ArrayBoundedLen}.
+ * Mutable version of {@link BoundedLengthTuple}.
  * Creates a mutable tuple type whose length is between `Min` and `Max` (both inclusive).
  *
  * @template Min - The minimum length (inclusive). Must be a non-negative integer literal.
  * @template Max - The maximum length (inclusive). Must be a non-negative integer literal.
  * @template Elm - The type of elements in the tuple.
  * @example
- * type T = MutableArrayBoundedLen<1, 2, number>; // [number] | [number, number]
+ * type T = MutableBoundedLengthTuple<1, 2, number>; // [number] | [number, number]
  */
-export type MutableArrayBoundedLen<
+export type MutableBoundedLengthTuple<
   Min extends number,
   Max extends number,
   Elm,
-> = Mutable<ArrayBoundedLen<Min, Max, Elm>>;
+> = Mutable<BoundedLengthTuple<Min, Max, Elm>>;
 
-/* ArrayAtMostLen */
+/* MaxLengthTuple */
 
 /**
  * Creates a readonly tuple type whose length is at most `N` (i.e. `0` to `N`, both inclusive).
- * Counterpart of {@link ArrayAtLeastLen}, defined as `ArrayBoundedLen<0, N, Elm>`.
+ * Counterpart of {@link MinLengthTuple}, defined as `BoundedLengthTuple<0, N, Elm>`.
  * The result is a union `readonly [] | readonly [Elm] | ... | MakeTuple<Elm, N>`.
  * Requires `N` to be a non-negative integer literal.
  *
@@ -176,23 +176,27 @@ export type MutableArrayBoundedLen<
  * @template Elm - The type of elements in the tuple.
  * @returns A union of readonly tuples whose lengths range from `0` to `N`.
  * @example
- * type AtMost2Numbers = ArrayAtMostLen<2, number>;
+ * type AtMost2Numbers = MaxLengthTuple<2, number>;
  * // readonly [] | readonly [number] | readonly [number, number]
  * const valid: AtMost2Numbers = []; // ok
  * const alsoValid: AtMost2Numbers = [1, 2]; // ok
  * // const invalid: AtMost2Numbers = [1, 2, 3]; // Error
  */
-export type ArrayAtMostLen<N extends number, Elm> = ArrayBoundedLen<0, N, Elm>;
+export type MaxLengthTuple<N extends number, Elm> = BoundedLengthTuple<
+  0,
+  N,
+  Elm
+>;
 
 /**
- * Mutable version of {@link ArrayAtMostLen}.
+ * Mutable version of {@link MaxLengthTuple}.
  * Creates a mutable tuple type whose length is at most `N` (i.e. `0` to `N`, both inclusive).
  *
  * @template N - The maximum length (inclusive). Must be a non-negative integer literal.
  * @template Elm - The type of elements in the tuple.
  * @example
- * type AtMost2Numbers = MutableArrayAtMostLen<2, number>; // [] | [number] | [number, number]
+ * type AtMost2Numbers = MutableMaxLengthTuple<2, number>; // [] | [number] | [number, number]
  */
-export type MutableArrayAtMostLen<N extends number, Elm> = Mutable<
-  ArrayAtMostLen<N, Elm>
+export type MutableMaxLengthTuple<N extends number, Elm> = Mutable<
+  MaxLengthTuple<N, Elm>
 >;

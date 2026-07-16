@@ -1,5 +1,5 @@
 import { expectType } from 'ts-data-forge';
-import { type ArrayOfLength } from '../../tuple-and-list/index.mjs';
+import { type FixedLengthTuple } from '../../tuple-and-list/index.mjs';
 import { type MaxLengthString } from '../predefined-strings/index.mjs';
 import {
   type BoundedLengthArray,
@@ -56,7 +56,7 @@ import {
 {
   expectType<
     MinLengthArray<3, number>,
-    readonly number[] &
+    readonly [number, number, number, ...(readonly number[])] &
       Readonly<{
         MinLength: readonly [0, 0, 0, ...(readonly 0[])];
       }> &
@@ -73,12 +73,19 @@ import {
 
   expectType<MinLengthArray<1, number>, MinLengthArray<0, number>>('<=');
 
+  // Holds across the structural-prefix cap (10) in both directions
   expectType<MinLengthArray<255, number>, MinLengthArray<0, number>>('<=');
+
+  expectType<MinLengthArray<12, number>, MinLengthArray<5, number>>('<=');
+
+  expectType<MinLengthArray<12, number>, MinLengthArray<11, number>>('<=');
 
   // Negative direction
   expectType<MinLengthArray<3, number>, MinLengthArray<5, number>>('!<=');
 
   expectType<MinLengthArray<0, number>, MinLengthArray<1, number>>('!<=');
+
+  expectType<MinLengthArray<11, number>, MinLengthArray<12, number>>('!<=');
 
   // Covariance in the element type
   expectType<MinLengthArray<3, 1 | 2>, MinLengthArray<3, number>>('<=');
@@ -92,6 +99,42 @@ import {
   expectType<MinLengthArray<3, number>, readonly number[]>('<=');
 
   expectType<readonly number[], MinLengthArray<3, number>>('!<=');
+
+  // Also a subtype of the structural at-least tuple (up to the prefix cap)
+  expectType<
+    MinLengthArray<3, number>,
+    readonly [number, number, number, ...(readonly number[])]
+  >('<=');
+}
+
+// Indexed access below the (clamped) minimum length does not include
+// `undefined` even under `noUncheckedIndexedAccess`
+
+declare const min3: MinLengthArray<3, number>;
+
+declare const min12: MinLengthArray<12, number>;
+
+{
+  const _min3At0 = min3[0];
+
+  expectType<typeof _min3At0, number>('=');
+
+  const _min3At2 = min3[2];
+
+  expectType<typeof _min3At2, number>('=');
+
+  const _min3At3 = min3[3];
+
+  expectType<typeof _min3At3, number | undefined>('=');
+
+  // The structural prefix is clamped at 10 for larger bounds
+  const _min12At9 = min12[9];
+
+  expectType<typeof _min12At9, number>('=');
+
+  const _min12At10 = min12[10];
+
+  expectType<typeof _min12At10, number | undefined>('=');
 }
 
 // MinLengthArray and MaxLengthArray are independent brands
@@ -112,21 +155,9 @@ import {
 
 // BoundedLengthArray
 
-{
-  expectType<
-    BoundedLengthArray<2, 5, number>,
-    readonly number[] &
-      Readonly<{
-        MinLength: readonly [0, 0, ...(readonly 0[])];
-      }> &
-      Readonly<{
-        MaxLength: 0 | 1 | 2 | 3 | 4 | 5;
-      }> &
-      Readonly<{
-        'TSTypeForgeInternals--edd2f9ce-7ca5-45b0-9d1a-bd61b9b5d9c3': unknown;
-      }>
-  >('=');
+declare const bounded25: BoundedLengthArray<2, 5, number>;
 
+{
   expectType<
     BoundedLengthArray<2, 5, number>,
     MaxLengthArray<5, number> & MinLengthArray<2, number>
@@ -165,14 +196,45 @@ import {
   );
 
   expectType<readonly number[], BoundedLengthArray<2, 5, number>>('!<=');
+
+  // Indexed access below the minimum length does not include `undefined`
+  const _bounded25At1 = bounded25[1];
+
+  expectType<typeof _bounded25At1, number>('=');
+
+  const _bounded25At2 = bounded25[2];
+
+  expectType<typeof _bounded25At2, number | undefined>('=');
 }
 
 // FixedLengthArray
 
+declare const fixed3: FixedLengthArray<3, number>;
+
 {
-  expectType<FixedLengthArray<3, number>, BoundedLengthArray<3, 3, number>>(
+  // Up to the prefix cap, the structural part is the exact tuple, so `length`
+  // is the literal `N` and in-range indexed access does not include `undefined`
+  expectType<
+    FixedLengthArray<3, number>,
+    BoundedLengthArray<3, 3, number> & FixedLengthTuple<3, number>
+  >('=');
+
+  expectType<FixedLengthArray<3, number>['length'], 3>('=');
+
+  const _fixed3At0 = fixed3[0];
+
+  expectType<typeof _fixed3At0, number>('=');
+
+  const _fixed3At2 = fixed3[2];
+
+  expectType<typeof _fixed3At2, number>('=');
+
+  // Beyond the prefix cap, only the clamped structural prefix remains
+  expectType<FixedLengthArray<12, number>, BoundedLengthArray<12, 12, number>>(
     '=',
   );
+
+  expectType<FixedLengthArray<12, number>['length'], number>('=');
 
   expectType<FixedLengthArray<3, number>, BoundedLengthArray<0, 3, number>>(
     '<=',
@@ -195,16 +257,18 @@ import {
   );
 }
 
-// Unrelated to the structural tuple-based family (ArrayOfLength etc.)
+// Relation to the structural tuple family (FixedLengthTuple etc.)
 
 {
-  expectType<FixedLengthArray<3, number>, ArrayOfLength<3, number>>('!<=');
+  // The hybrid FixedLengthArray is assignable to the structural tuple
+  // (up to the prefix cap), but not vice versa (the brand is missing)
+  expectType<FixedLengthArray<3, number>, FixedLengthTuple<3, number>>('<=');
 
-  expectType<ArrayOfLength<3, number>, FixedLengthArray<3, number>>('!<=');
+  expectType<FixedLengthTuple<3, number>, FixedLengthArray<3, number>>('!<=');
 }
 
 // Supports large length parameters that the tuple-based family cannot handle
-// (ArrayAtMostLen / ArrayBoundedLen hit the recursion limit around N > 100)
+// (MaxLengthTuple / BoundedLengthTuple hit the recursion limit around N > 100)
 
 {
   expectType<MaxLengthArray<500, number>, MaxLengthArray<1000, number>>('<=');

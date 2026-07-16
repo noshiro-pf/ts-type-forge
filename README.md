@@ -122,7 +122,7 @@ Comprehensive branded types for enhanced numeric type safety.
 
 Type-safe array and tuple utilities with functional programming patterns.
 
-- **Array Types** - `NonEmptyArray`, `ArrayOfLength`, `ArrayAtLeastLen`
+- **Array Types** - `NonEmptyArray`, `FixedLengthTuple`, `MinLengthTuple`
 - **List Namespace** - Comprehensive list operations (Head, Tail, Take, Skip, etc.)
 - **Tuple Namespace** - Type-safe tuple manipulations with compile-time guarantees
 
@@ -705,14 +705,14 @@ For detailed information on all types, see the [Full API Reference](./docs/READM
     - [MutableNonEmptyArray](./src/tuple-and-list/array.mts#L15)
     - [NonEmptyArray](./src/tuple-and-list/array.mts#L27)
     - [ArrayElement](./src/tuple-and-list/array.mts#L40)
-    - [ArrayOfLength](./src/tuple-and-list/array.mts#L54)
-    - [MutableArrayOfLength](./src/tuple-and-list/array.mts#L64)
-    - [MutableArrayAtLeastLen](./src/tuple-and-list/array.mts#L83)
-    - [ArrayAtLeastLen](./src/tuple-and-list/array.mts#L98)
-    - [ArrayBoundedLen](./src/tuple-and-list/array.mts#L145)
-    - [MutableArrayBoundedLen](./src/tuple-and-list/array.mts#L161)
-    - [ArrayAtMostLen](./src/tuple-and-list/array.mts#L185)
-    - [MutableArrayAtMostLen](./src/tuple-and-list/array.mts#L196)
+    - [FixedLengthTuple](./src/tuple-and-list/array.mts#L54)
+    - [MutableFixedLengthTuple](./src/tuple-and-list/array.mts#L64)
+    - [MutableMinLengthTuple](./src/tuple-and-list/array.mts#L83)
+    - [MinLengthTuple](./src/tuple-and-list/array.mts#L98)
+    - [BoundedLengthTuple](./src/tuple-and-list/array.mts#L145)
+    - [MutableBoundedLengthTuple](./src/tuple-and-list/array.mts#L161)
+    - [MaxLengthTuple](./src/tuple-and-list/array.mts#L185)
+    - [MutableMaxLengthTuple](./src/tuple-and-list/array.mts#L196)
 - src/tuple-and-list/index-of-tuple.mts
     - [IndexOfTuple](./src/tuple-and-list/index-of-tuple.mts#L17)
     - [NegativeIndexOfTuple](./src/tuple-and-list/index-of-tuple.mts#L52)
@@ -809,7 +809,7 @@ const numbers: readonly number[] = [1, 2, 3, 4, 5, 2, 3];
 // Type-safe length checking
 if (Arr.isArrayAtLeastLength(numbers, 2)) {
     // numbers is now guaranteed to have at least 3 elements
-    expectType<typeof numbers, ArrayAtLeastLen<2, number>>('=');
+    expectType<typeof numbers, MinLengthTuple<2, number>>('=');
     console.log(numbers[1]); // Array access to index 0, 1 is now safe even with noUncheckedIndexedAccess enabled
 }
 

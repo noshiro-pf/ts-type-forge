@@ -320,40 +320,40 @@ declare global {
   type MutableNonEmptyArray<A> = _TSTypeForge.MutableNonEmptyArray<A>;
   type NonEmptyArray<A> = _TSTypeForge.NonEmptyArray<A>;
   type ArrayElement<S> = _TSTypeForge.ArrayElement<S>;
-  type ArrayOfLength<N extends number, Elm> = _TSTypeForge.ArrayOfLength<
+  type FixedLengthTuple<N extends number, Elm> = _TSTypeForge.FixedLengthTuple<
     N,
     Elm
   >;
-  type MutableArrayOfLength<
+  type MutableFixedLengthTuple<
     N extends number,
     Elm,
-  > = _TSTypeForge.MutableArrayOfLength<N, Elm>;
-  type MutableArrayAtLeastLen<
+  > = _TSTypeForge.MutableFixedLengthTuple<N, Elm>;
+  type MutableMinLengthTuple<
     N extends number,
     Elm,
-  > = _TSTypeForge.MutableArrayAtLeastLen<N, Elm>;
-  type ArrayAtLeastLen<N extends number, Elm> = _TSTypeForge.ArrayAtLeastLen<
+  > = _TSTypeForge.MutableMinLengthTuple<N, Elm>;
+  type MinLengthTuple<N extends number, Elm> = _TSTypeForge.MinLengthTuple<
     N,
     Elm
   >;
-  type ArrayBoundedLen<
+  type BoundedLengthTuple<
     Min extends number,
     Max extends number,
     Elm,
-  > = _TSTypeForge.ArrayBoundedLen<Min, Max, Elm>;
-  type MutableArrayBoundedLen<
+  > = _TSTypeForge.BoundedLengthTuple<Min, Max, Elm>;
+  type MutableBoundedLengthTuple<
     Min extends number,
     Max extends number,
     Elm,
-  > = _TSTypeForge.MutableArrayBoundedLen<Min, Max, Elm>;
-  type ArrayAtMostLen<N extends number, Elm> = _TSTypeForge.ArrayAtMostLen<
+  > = _TSTypeForge.MutableBoundedLengthTuple<Min, Max, Elm>;
+  type MaxLengthTuple<N extends number, Elm> = _TSTypeForge.MaxLengthTuple<
     N,
     Elm
   >;
-  type MutableArrayAtMostLen<
+  type MutableMaxLengthTuple<
     N extends number,
     Elm,
-  > = _TSTypeForge.MutableArrayAtMostLen<N, Elm>;
+  > = _TSTypeForge.MutableMaxLengthTuple<N, Elm>;
   type IndexOfTuple<T extends readonly unknown[]> =
     _TSTypeForge.IndexOfTuple<T>;
   type NegativeIndexOfTuple<T extends readonly unknown[]> =

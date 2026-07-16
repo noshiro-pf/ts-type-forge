@@ -1,11 +1,34 @@
-import { type ArrayAtLeastLen } from '../../tuple-and-list/index.mjs';
+import {
+  type FixedLengthTuple,
+  type MinLengthTuple,
+} from '../../tuple-and-list/index.mjs';
 import { type UintRangeInclusive } from '../../type-level-integer/index.mjs';
 import { type TSTypeForgeInternals_BrandEncapsulated } from '../_internals.mjs';
 
 /**
+ * @internal Upper bound (inclusive) of the structural tuple prefix embedded in
+ * {@link MinLengthArray} (and, via composition, in {@link BoundedLengthArray}
+ * and {@link FixedLengthArray}). The prefix is what makes indexed access below
+ * the minimum length not include `undefined` under
+ * `noUncheckedIndexedAccess`. It is kept small so that the prefix stays cheap
+ * for the type checker even when the element type is large.
+ */
+type StructuralPrefixCap = 10;
+
+/**
+ * @internal Clamps `N` to {@link StructuralPrefixCap}. Monotone in `N`, so the
+ * length-constraint subtyping relation is preserved across the cap (e.g.
+ * `MinLengthArray<12, E>` stays assignable to `MinLengthArray<5, E>`).
+ */
+type ClampToPrefixCap<N extends number> =
+  N extends UintRangeInclusive<0, StructuralPrefixCap>
+    ? N
+    : StructuralPrefixCap;
+
+/**
  * Branded readonly array type for arrays with at most `MaxLength` elements.
  *
- * Unlike the structural tuple-based `ArrayAtMostLen`, the length
+ * Unlike the structural tuple-based `MaxLengthTuple`, the length
  * constraint is encoded only in the brand, so the element type `Elm` never
  * gets multiplied into tuple positions or tuple unions. This keeps
  * type-checking cost (instantiation count / memory) independent of the size of
@@ -51,12 +74,18 @@ export type MaxLengthArray<
 /**
  * Branded readonly array type for arrays with at least `MinLength` elements.
  *
- * Unlike the structural tuple-based {@link ArrayAtLeastLen}, the length
- * constraint is encoded only in the brand, so the element type `Elm` never
- * appears in tuple positions. This keeps type-checking cost independent of the
- * size of `Elm` (the brand internally uses a tuple of the literal `0`, whose
- * cost does not depend on `Elm`). Prefer this type when `Elm` is a large type
- * or the bound is large.
+ * Unlike the structural tuple-based {@link MinLengthTuple}, the exact length
+ * constraint is encoded in the brand (a tuple of the literal `0`, whose cost
+ * does not depend on `Elm`), so type-checking cost stays essentially
+ * independent of the size of `Elm` and of the bound. Prefer this type when
+ * `Elm` is a large type or the bound is large.
+ *
+ * For ergonomics, the structural part is not a plain `readonly Elm[]` but
+ * `MinLengthTuple<min(MinLength, 10), Elm>`: indexed access below
+ * `min(MinLength, 10)` does not include `undefined` under
+ * `noUncheckedIndexedAccess`. The prefix length is clamped at `10` so that the
+ * structural part stays cheap for large bounds; the clamp is monotone, so the
+ * subtyping relation below is unaffected.
  *
  * The brand is encoded so that the natural subtyping relation between length
  * constraints is preserved: if `M >= N`, then `MinLengthArray<M, Elm>` is
@@ -86,10 +115,10 @@ export type MaxLengthArray<
 export type MinLengthArray<
   MinLength extends number,
   Elm = unknown,
-> = readonly Elm[] &
+> = MinLengthTuple<ClampToPrefixCap<MinLength>, Elm> &
   TSTypeForgeInternals_BrandEncapsulated<
     Readonly<{
-      MinLength: ArrayAtLeastLen<MinLength, 0>;
+      MinLength: MinLengthTuple<MinLength, 0>;
     }>
   >;
 
@@ -102,7 +131,7 @@ export type MinLengthArray<
  * `BoundedLengthArray<N1, N2, Elm>` if `M1 >= N1` and `M2 <= N2`.
  *
  * This is the brand-based, lightweight counterpart of the structural
- * tuple-based `ArrayBoundedLen`; see {@link MaxLengthArray} for why it
+ * tuple-based `BoundedLengthTuple`; see {@link MaxLengthArray} for why it
  * is much cheaper to type-check when the element type is large.
  *
  * @template MinLength - The minimum number of elements (inclusive). Must be a
@@ -132,11 +161,16 @@ export type BoundedLengthArray<
  * Alias for `BoundedLengthArray<Length, Length, Elm>`.
  *
  * This is the brand-based, lightweight counterpart of the structural
- * tuple-based `ArrayOfLength`. Unlike `ArrayOfLength`, the result is a
- * branded `readonly Elm[]` rather than a tuple, so positional element types
- * and a literal `length` are not available — in exchange, type-checking cost
- * does not depend on the size of `Elm`. Prefer this type when `Elm` is a large
+ * tuple-based `FixedLengthTuple`; type-checking cost stays essentially
+ * independent of the size of `Elm`. Prefer this type when `Elm` is a large
  * type or the length is large.
+ *
+ * For `Length <= 10`, the structural part is additionally intersected with the
+ * exact tuple `FixedLengthTuple<Length, Elm>`, so `length` is the literal
+ * `Length` and in-range indexed access does not include `undefined` under
+ * `noUncheckedIndexedAccess` (and the type is assignable to
+ * `FixedLengthTuple<Length, Elm>`). For larger lengths only the clamped
+ * structural prefix inherited from {@link MinLengthArray} remains.
  *
  * @template Length - The exact number of elements. Must be a non-negative
  *   integer literal.
@@ -154,4 +188,7 @@ export type BoundedLengthArray<
 export type FixedLengthArray<
   Length extends number,
   Elm = unknown,
-> = BoundedLengthArray<Length, Length, Elm>;
+> = BoundedLengthArray<Length, Length, Elm> &
+  (Length extends UintRangeInclusive<0, StructuralPrefixCap>
+    ? FixedLengthTuple<Length, Elm>
+    : unknown);
