@@ -105,6 +105,9 @@ brand 単独では `xs[0]` が `T | undefined` になる(`noUncheckedIndexedAcce
 | Min ≤ 長さ ≤ Max | `BoundedLengthString` | `BoundedLengthArray` | `BoundedLengthTuple`(旧 `ArrayBoundedLen`) |
 
 - `Mutable*` 変種も同様に改名(`MutableArrayOfLength` → `MutableFixedLengthTuple` など)。
+- ts-data-forge のガード関数・ts-fortress のバリデータ関数も同じ規則に統一
+  (タプル版: `isFixedLengthTuple` / `fixedLengthTuple` 等、brand 版: `isFixedLengthArray` /
+  `fixedLengthArray` 等)。文字列版ガード(`isMinLengthString` 等)は元から本規則で公開済み。
 - 検討した代替案と不採用理由:
     - `TupleOfLength` 等の `Tuple○○` 語順 → `FixedLengthString` と語順が揃わない。
     - `ArrayAtLeastLenNaive` のような `Naive` 接尾辞 → 実装品質でなく型の性質で命名すべき。
@@ -178,18 +181,22 @@ brand 単独では `xs[0]` が `T | undefined` になる(`noUncheckedIndexedAcce
   (`isMinLengthArray` / `isMaxLengthArray` / `isBoundedLengthArray` / `isFixedLengthArray`)。
   narrowing 結果はハイブリッド型との交差なので、ガード成立後の添字アクセスは `undefined` を含まない
   (テストで担保)。
-- 既存のタプル版ガード(`isArrayOfLength` 等)の**関数名は変更せず**、参照する型名のみ追随。
-  関数名も型名に合わせる案(`isFixedLengthTuple` 等)は、利用アプリへの影響が大きいため
-  今回は見送り(将来の候補として記録)。
+- 既存のタプル版ガードも型名に合わせて改名(major のため関数名も同時に統一):
+  `isArrayOfLength` → `isFixedLengthTuple`、`isArrayAtLeastLength` → `isMinLengthTuple`、
+  `isArrayAtMostLength` → `isMaxLengthTuple`、`isArrayBoundedLength` → `isBoundedLengthTuple`。
+  対応する JSDoc 用サンプルファイル(`samples/src/array/`)も改名。
 
 ### ts-fortress(major)
 
 - 新設: `src/array/length-constrained-array.mts`
   (`fixedLengthArray` / `minLengthArray` / `maxLengthArray` / `boundedLengthArray` バリデータ。
   ランタイム検証・エラー details・`fill` / `prune` はタプル版と同等)。
-- タプル版バリデータ(`arrayOfLength` 等)の関数名は変更せず、型参照とデフォルト `typeName` 文字列
-  (エラーメッセージに現れる)のみ新型名に追随(例: `ArrayOfLength<2, EvenRange>` →
-  `FixedLengthTuple<2, EvenRange>`)。
+- タプル版バリデータも型名に合わせて改名: `arrayOfLength` → `fixedLengthTuple`、
+  `arrayAtLeastLength` → `minLengthTuple`、`arrayAtMostLength` → `maxLengthTuple`、
+  `arrayBoundedLength` → `boundedLengthTuple`(ソースファイル名も
+  `fixed-length-tuple.mts` 等へ改名)。デフォルト `typeName` 文字列(エラーメッセージに現れる)も
+  新型名に追随(例: `ArrayOfLength<2, EvenRange>` → `FixedLengthTuple<2, EvenRange>`)。
+  内部の `Arr.isArrayOfLength` 等の呼び出しも新ガード名へ追随。
 
 ### 使い分けガイド
 
@@ -229,8 +236,9 @@ pnpm run type-check && pnpm run lint && pnpm run test
     - ts-data-forge のブランチ CI は新 ts-type-forge の publish + 依存更新まで型エラーで失敗する。
     - ts-fortress は新 ts-type-forge に加えて(公開版 ts-data-forge が旧型名を参照するため)
       **新 ts-data-forge も必要**。
-- 利用アプリの移行: 旧タプル版の型名を新名に機械的に置換(`\b` 境界付き置換で関数名
-  `isArrayOfLength` 等を巻き込まないこと)。ESLint メモリ問題のある箇所は brand 版へ移行。
+- 利用アプリの移行: 旧タプル版の型名・関数名を新名に機械的に置換
+  (型: `ArrayOfLength` → `FixedLengthTuple` 等 / 関数: `isArrayOfLength` → `isFixedLengthTuple`、
+  `arrayOfLength` → `fixedLengthTuple` 等)。ESLint メモリ問題のある箇所は brand 版へ移行。
 
 ## 9. その他の軽量化アイデア(brand 化以外・参考)
 
