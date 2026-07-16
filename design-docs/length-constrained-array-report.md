@@ -173,7 +173,11 @@ brand 単独では `xs[0]` が `T | undefined` になる(`noUncheckedIndexedAcce
 - 改名(破壊的): `ArrayOfLength` → `FixedLengthTuple`、`ArrayAtLeastLen` → `MinLengthTuple`、
   `ArrayAtMostLen` → `MaxLengthTuple`、`ArrayBoundedLen` → `BoundedLengthTuple`(+ `Mutable*` 変種)。
   旧名のエイリアスは残していない。
-- `index.mts` / `global.mts` は生成スクリプトで再生成。
+- ファイル構成も型名に追随: タプル版 family は `src/tuple-and-list/array.mts` から
+  `src/tuple-and-list/length-constrained-tuple.mts` へ分離
+  (`length-constrained-string.mts` / `length-constrained-array.mts` と対称)。
+  `array.mts` には `NonEmptyArray` / `ArrayElement` 等の汎用配列型のみが残る。
+- `index.mts` / `global.mts` / README の型一覧は生成スクリプトで再生成。
 
 ### ts-data-forge(major)
 

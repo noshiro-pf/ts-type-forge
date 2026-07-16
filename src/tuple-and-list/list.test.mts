@@ -1,6 +1,6 @@
 import { expectType } from 'ts-data-forge';
 import { type DeepReadonly } from '../record/index.mjs';
-import { type FixedLengthTuple } from './array.mjs';
+import { type FixedLengthTuple } from './length-constrained-tuple.mjs';
 import { type List } from './list.mjs';
 
 // ── butlast ─────────────────────────

@@ -320,6 +320,10 @@ declare global {
   type MutableNonEmptyArray<A> = _TSTypeForge.MutableNonEmptyArray<A>;
   type NonEmptyArray<A> = _TSTypeForge.NonEmptyArray<A>;
   type ArrayElement<S> = _TSTypeForge.ArrayElement<S>;
+  type IndexOfTuple<T extends readonly unknown[]> =
+    _TSTypeForge.IndexOfTuple<T>;
+  type NegativeIndexOfTuple<T extends readonly unknown[]> =
+    _TSTypeForge.NegativeIndexOfTuple<T>;
   type FixedLengthTuple<N extends number, Elm> = _TSTypeForge.FixedLengthTuple<
     N,
     Elm
@@ -354,10 +358,6 @@ declare global {
     N extends number,
     Elm,
   > = _TSTypeForge.MutableMaxLengthTuple<N, Elm>;
-  type IndexOfTuple<T extends readonly unknown[]> =
-    _TSTypeForge.IndexOfTuple<T>;
-  type NegativeIndexOfTuple<T extends readonly unknown[]> =
-    _TSTypeForge.NegativeIndexOfTuple<T>;
   type MakeTuple<Elm, N extends number> = _TSTypeForge.MakeTuple<Elm, N>;
   type AbsoluteValue<N extends number> = _TSTypeForge.AbsoluteValue<N>;
   type Abs<N extends number> = _TSTypeForge.Abs<N>;

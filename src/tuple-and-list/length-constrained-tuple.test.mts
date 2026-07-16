@@ -7,7 +7,7 @@ import {
   type MutableBoundedLengthTuple,
   type MutableFixedLengthTuple,
   type MutableMaxLengthTuple,
-} from './array.mjs';
+} from './length-constrained-tuple.mjs';
 
 expectType<[0, 0], MutableFixedLengthTuple<2, 0>>('=');
 
