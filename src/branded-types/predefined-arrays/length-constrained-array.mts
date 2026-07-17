@@ -109,6 +109,7 @@ export type MaxLengthArray<
  * const history = [0, 1, 2, 3] as unknown as MinLengthArray<3, number>;
  *
  * const nonEmpty: MinLengthArray<1, number> = history; // OK (3 >= 1)
+ * const first: number = history[0]; // OK — no `undefined` below min(N, 10)
  * // const longer: MinLengthArray<5, number> = history; // Error! (3 < 5)
  * ```
  */
@@ -182,6 +183,8 @@ export type BoundedLengthArray<
  *
  * const atMost5: MaxLengthArray<5, number> = rgb; // OK (3 <= 5)
  * const nonEmpty: MinLengthArray<1, number> = rgb; // OK (3 >= 1)
+ * const red: number = rgb[0]; // OK — in-range indexed access (N <= 10)
+ * const len: 3 = rgb.length; // `length` is the literal N (N <= 10)
  * // const rgba: FixedLengthArray<4, number> = rgb; // Error!
  * ```
  */
