@@ -484,10 +484,11 @@ For detailed information on all types, see the [Full API Reference](./docs/READM
     - [IntersectBrand](./src/branded-types/brand.mts#L247)
     - [NormalizeBrandUnion](./src/branded-types/brand.mts#L272)
 - src/branded-types/predefined-arrays/length-constrained-array.mts
-    - [MaxLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L64)
-    - [MinLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L116)
-    - [BoundedLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L154)
-    - [FixedLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L191)
+    - [SupportedArrayLength](./src/branded-types/predefined-arrays/length-constrained-array.mts#L30)
+    - [MaxLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L91)
+    - [MinLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L143)
+    - [BoundedLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L181)
+    - [FixedLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L218)
 - src/branded-types/predefined-numbers/bigint.mts
     - [BigInt64](./src/branded-types/predefined-numbers/bigint.mts#L18)
     - [BigUint64](./src/branded-types/predefined-numbers/bigint.mts#L33)

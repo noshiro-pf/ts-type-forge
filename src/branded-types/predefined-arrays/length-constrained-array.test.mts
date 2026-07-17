@@ -6,6 +6,7 @@ import {
   type FixedLengthArray,
   type MaxLengthArray,
   type MinLengthArray,
+  type SupportedArrayLength,
 } from './length-constrained-array.mjs';
 
 // MaxLengthArray
@@ -279,4 +280,33 @@ declare const fixed3: FixedLengthArray<3, number>;
     BoundedLengthArray<100, 1000, number>,
     BoundedLengthArray<0, 2000, number>
   >('<=');
+}
+
+// Length parameters are capped at 2048 (SupportedArrayLength); larger literals
+// are rejected with a constraint error instead of a deep-instantiation error
+
+{
+  expectType<2048, SupportedArrayLength>('<=');
+
+  expectType<2049, SupportedArrayLength>('!<=');
+
+  // The cap itself is usable
+  expectType<MaxLengthArray<2048, number>, MaxLengthArray<2048, number>>('=');
+
+  expectType<MinLengthArray<2048, number>, MinLengthArray<2047, number>>('<=');
+
+  // @ts-expect-error 2049 exceeds the supported length cap
+  type _TooLargeMax = MaxLengthArray<2049, number>;
+
+  // @ts-expect-error 2049 exceeds the supported length cap
+  type _TooLargeMin = MinLengthArray<2049, number>;
+
+  // @ts-expect-error 2049 exceeds the supported length cap
+  type _TooLargeBounded = BoundedLengthArray<0, 2049, number>;
+
+  // @ts-expect-error 2049 exceeds the supported length cap
+  type _TooLargeFixed = FixedLengthArray<2049, number>;
+
+  // @ts-expect-error non-literal number is rejected
+  type _NonLiteral = FixedLengthArray<number, number>;
 }

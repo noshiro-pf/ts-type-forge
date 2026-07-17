@@ -44,21 +44,22 @@ declare global {
   > = _TSTypeForge.IntersectBrand<B1, B2>;
   type NormalizeBrandUnion<B extends UnknownBrand> =
     _TSTypeForge.NormalizeBrandUnion<B>;
+  type SupportedArrayLength = _TSTypeForge.SupportedArrayLength;
   type MaxLengthArray<
-    MaxLength extends number,
+    MaxLength extends SupportedArrayLength,
     Elm = unknown,
   > = _TSTypeForge.MaxLengthArray<MaxLength, Elm>;
   type MinLengthArray<
-    MinLength extends number,
+    MinLength extends SupportedArrayLength,
     Elm = unknown,
   > = _TSTypeForge.MinLengthArray<MinLength, Elm>;
   type BoundedLengthArray<
-    MinLength extends number,
-    MaxLength extends number,
+    MinLength extends SupportedArrayLength,
+    MaxLength extends SupportedArrayLength,
     Elm = unknown,
   > = _TSTypeForge.BoundedLengthArray<MinLength, MaxLength, Elm>;
   type FixedLengthArray<
-    Length extends number,
+    Length extends SupportedArrayLength,
     Elm = unknown,
   > = _TSTypeForge.FixedLengthArray<Length, Elm>;
   type BigInt64 = _TSTypeForge.BigInt64;

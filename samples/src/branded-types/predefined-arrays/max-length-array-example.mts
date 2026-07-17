@@ -1,8 +1,8 @@
-import { type MaxLengthArray } from 'ts-type-forge';
+import { type MaxLengthArray, type SupportedArrayLength } from 'ts-type-forge';
 
 // embed-sample-code-ignore-above
 
-const isMaxLengthArray = <N extends number, E>(
+const isMaxLengthArray = <N extends SupportedArrayLength, E>(
   xs: readonly E[],
   maxLength: N,
 ): xs is MaxLengthArray<N, E> => xs.length <= maxLength;
