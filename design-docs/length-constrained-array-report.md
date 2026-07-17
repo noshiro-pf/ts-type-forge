@@ -210,8 +210,10 @@ brand 単独では `xs[0]` が `T | undefined` になる(`noUncheckedIndexedAcce
 | 位置ごとに異なる型を持つ固定形状、網羅的な分割代入が必要 | タプル版(`*LengthTuple`)          |
 | 添字アクセスの `undefined` 除去だけが目的                | brand 版で足りる(N ≤ 10 の接頭辞) |
 
-brand 版の値の構築はガード(`isFixedLengthArray` 等)・バリデータ(`fixedLengthArray` 等)・
-`as` キャストのいずれかで行う(`MaxLengthString` と同じ運用)。配列リテラルの直接代入は不可。
+brand 版の値の構築はガード(`isFixedLengthArray` 等)・ランタイム検証付きキャスト
+(`asFixedLengthArray` / `asMinLengthArray` / `asMaxLengthArray` / `asBoundedLengthArray`。
+長さ違反時は `TypeError`)・バリデータ(`fixedLengthArray` 等)のいずれかで行う
+(`MaxLengthString` と同じ運用)。配列リテラルの直接代入は不可。
 
 ## 7. ローカル検証手順(node_modules パッチ)
 
