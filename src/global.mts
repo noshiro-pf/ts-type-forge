@@ -45,6 +45,7 @@ declare global {
   type NormalizeBrandUnion<B extends UnknownBrand> =
     _TSTypeForge.NormalizeBrandUnion<B>;
   type StructuralPrefixCap = _TSTypeForge.StructuralPrefixCap;
+  type StructuralPrefixLength = _TSTypeForge.StructuralPrefixLength;
   type MaxLengthArray<
     MaxLength extends SupportedLength,
     Elm = unknown,

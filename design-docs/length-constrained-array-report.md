@@ -88,8 +88,15 @@ type FixedLengthArray<Length, Elm> = BoundedLengthArray<Length, Length, Elm> &
     - ts-fortress: branded バリデータの長さ制約を `SmallUint`(≤39)から `SupportedLength`(≤2048)へ
       拡大。`string()` の brand エンコード可能範囲も `SmallInt<'>0'>`(1..39)から
       `1..2048` に拡大(範囲判定は `infer M extends SupportedLengthLiteral` で行い、
-      TS7(native)の複雑度制限 TS2859 を回避)。構造的タプル版バリデータのみ従来どおり
-      `SmallUint` を上限とする(タプル展開の実行上限のため)。
+      TS7(native)の複雑度制限 TS2859 を回避)。構造的タプル版バリデータの上限は
+      `SmallUint`(≤39)をやめ、ts-type-forge が export する
+      `StructuralPrefixLength`(`0..10` = `StructuralPrefixCap` 以下)に統一
+      (「N をタプル展開するか `readonly T[]` で済ませるか」の境界を 3 リポジトリで一本化)。
+- cap の実上限の根拠はテストで固定した: `MakeTuple` は **N = 9999 まで成功し、N = 10000 で
+  TS2799**(tuple type too large)になる(TS6 / TS7(native) とも同一。
+  `make-tuple.test.mts` に境界の型テストを追加)。`SupportedLengthCap = 2048` は
+  この実上限に対して十分な余裕を持つ。なお下流の条件型でこの union を使う場合、
+  TS7 の複雑度制限(TS2859)が別途効きうる点に注意(ts-fortress `string()` で実例あり)。
 
 ## 3. ハイブリッド構造(第2版): 添字アクセスの `undefined` 除去
 

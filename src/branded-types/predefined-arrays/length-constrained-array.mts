@@ -22,6 +22,16 @@ import { type SupportedLength } from '../supported-length.mjs';
 export type StructuralPrefixCap = 10;
 
 /**
+ * Union of the length values (`0 | 1 | ... | 10`) at or below
+ * {@link StructuralPrefixCap} — i.e. the lengths for which structural tuple
+ * expansion is considered cheap enough. Exported so that downstream libraries
+ * can use the same boundary as a type-parameter constraint (e.g. runtime
+ * validators that only encode a structural tuple type for lengths in this
+ * range and fall back to `readonly Elm[]` otherwise).
+ */
+export type StructuralPrefixLength = UintRangeInclusive<0, StructuralPrefixCap>;
+
+/**
  * @internal Clamps `N` to {@link StructuralPrefixCap}. Monotone in `N`, so the
  * length-constraint subtyping relation is preserved across the cap (e.g.
  * `MinLengthArray<12, E>` stays assignable to `MinLengthArray<5, E>`).

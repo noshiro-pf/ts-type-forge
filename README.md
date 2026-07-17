@@ -485,10 +485,11 @@ For detailed information on all types, see the [Full API Reference](./docs/READM
     - [NormalizeBrandUnion](./src/branded-types/brand.mts#L272)
 - src/branded-types/predefined-arrays/length-constrained-array.mts
     - [StructuralPrefixCap](./src/branded-types/predefined-arrays/length-constrained-array.mts#L22)
-    - [MaxLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L70)
-    - [MinLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L122)
-    - [BoundedLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L160)
-    - [FixedLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L197)
+    - [StructuralPrefixLength](./src/branded-types/predefined-arrays/length-constrained-array.mts#L32)
+    - [MaxLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L80)
+    - [MinLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L132)
+    - [BoundedLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L170)
+    - [FixedLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L207)
 - src/branded-types/predefined-numbers/bigint.mts
     - [BigInt64](./src/branded-types/predefined-numbers/bigint.mts#L18)
     - [BigUint64](./src/branded-types/predefined-numbers/bigint.mts#L33)
