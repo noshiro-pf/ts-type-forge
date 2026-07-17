@@ -1,12 +1,12 @@
 import { expectType } from 'ts-data-forge';
 import { type FixedLengthTuple } from '../../tuple-and-list/index.mjs';
 import { type MaxLengthString } from '../predefined-strings/index.mjs';
+import { type SupportedLength } from '../supported-length.mjs';
 import {
   type BoundedLengthArray,
   type FixedLengthArray,
   type MaxLengthArray,
   type MinLengthArray,
-  type SupportedArrayLength,
 } from './length-constrained-array.mjs';
 
 // MaxLengthArray
@@ -282,13 +282,13 @@ declare const fixed3: FixedLengthArray<3, number>;
   >('<=');
 }
 
-// Length parameters are capped at 2048 (SupportedArrayLength); larger literals
+// Length parameters are capped at 2048 (SupportedLength); larger literals
 // are rejected with a constraint error instead of a deep-instantiation error
 
 {
-  expectType<2048, SupportedArrayLength>('<=');
+  expectType<2048, SupportedLength>('<=');
 
-  expectType<2049, SupportedArrayLength>('!<=');
+  expectType<2049, SupportedLength>('!<=');
 
   // The cap itself is usable
   expectType<MaxLengthArray<2048, number>, MaxLengthArray<2048, number>>('=');

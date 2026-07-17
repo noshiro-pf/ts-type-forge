@@ -484,11 +484,11 @@ For detailed information on all types, see the [Full API Reference](./docs/READM
     - [IntersectBrand](./src/branded-types/brand.mts#L247)
     - [NormalizeBrandUnion](./src/branded-types/brand.mts#L272)
 - src/branded-types/predefined-arrays/length-constrained-array.mts
-    - [SupportedArrayLength](./src/branded-types/predefined-arrays/length-constrained-array.mts#L30)
-    - [MaxLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L91)
-    - [MinLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L143)
-    - [BoundedLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L181)
-    - [FixedLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L218)
+    - [StructuralPrefixCap](./src/branded-types/predefined-arrays/length-constrained-array.mts#L22)
+    - [MaxLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L70)
+    - [MinLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L122)
+    - [BoundedLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L160)
+    - [FixedLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L197)
 - src/branded-types/predefined-numbers/bigint.mts
     - [BigInt64](./src/branded-types/predefined-numbers/bigint.mts#L18)
     - [BigUint64](./src/branded-types/predefined-numbers/bigint.mts#L33)
@@ -585,12 +585,15 @@ For detailed information on all types, see the [Full API Reference](./docs/READM
     - [PositiveUint32WithSmallInt](./src/branded-types/predefined-numbers/uint32.mts#L62)
     - [NonZeroUint32WithSmallInt](./src/branded-types/predefined-numbers/uint32.mts#L69)
 - src/branded-types/predefined-strings/length-constrained-string.mts
-    - [MaxLengthString](./src/branded-types/predefined-strings/length-constrained-string.mts#L31)
-    - [MinLengthString](./src/branded-types/predefined-strings/length-constrained-string.mts#L64)
-    - [BoundedLengthString](./src/branded-types/predefined-strings/length-constrained-string.mts#L94)
-    - [FixedLengthString](./src/branded-types/predefined-strings/length-constrained-string.mts#L115)
+    - [MaxLengthString](./src/branded-types/predefined-strings/length-constrained-string.mts#L32)
+    - [MinLengthString](./src/branded-types/predefined-strings/length-constrained-string.mts#L65)
+    - [BoundedLengthString](./src/branded-types/predefined-strings/length-constrained-string.mts#L95)
+    - [FixedLengthString](./src/branded-types/predefined-strings/length-constrained-string.mts#L116)
 - src/branded-types/predefined-strings/non-empty-string.mts
     - [NonEmptyString](./src/branded-types/predefined-strings/non-empty-string.mts#L20)
+- src/branded-types/supported-length.mts
+    - [SupportedLengthCap](./src/branded-types/supported-length.mts#L18)
+    - [SupportedLength](./src/branded-types/supported-length.mts#L31)
 - src/condition/eq.mts
     - [TypeEq](./src/condition/eq.mts#L23)
 - src/condition/extends.mts

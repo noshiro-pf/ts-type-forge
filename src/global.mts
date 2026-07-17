@@ -44,22 +44,22 @@ declare global {
   > = _TSTypeForge.IntersectBrand<B1, B2>;
   type NormalizeBrandUnion<B extends UnknownBrand> =
     _TSTypeForge.NormalizeBrandUnion<B>;
-  type SupportedArrayLength = _TSTypeForge.SupportedArrayLength;
+  type StructuralPrefixCap = _TSTypeForge.StructuralPrefixCap;
   type MaxLengthArray<
-    MaxLength extends SupportedArrayLength,
+    MaxLength extends SupportedLength,
     Elm = unknown,
   > = _TSTypeForge.MaxLengthArray<MaxLength, Elm>;
   type MinLengthArray<
-    MinLength extends SupportedArrayLength,
+    MinLength extends SupportedLength,
     Elm = unknown,
   > = _TSTypeForge.MinLengthArray<MinLength, Elm>;
   type BoundedLengthArray<
-    MinLength extends SupportedArrayLength,
-    MaxLength extends SupportedArrayLength,
+    MinLength extends SupportedLength,
+    MaxLength extends SupportedLength,
     Elm = unknown,
   > = _TSTypeForge.BoundedLengthArray<MinLength, MaxLength, Elm>;
   type FixedLengthArray<
-    Length extends SupportedArrayLength,
+    Length extends SupportedLength,
     Elm = unknown,
   > = _TSTypeForge.FixedLengthArray<Length, Elm>;
   type BigInt64 = _TSTypeForge.BigInt64;
@@ -160,17 +160,19 @@ declare global {
   type Uint32WithSmallInt = _TSTypeForge.Uint32WithSmallInt;
   type PositiveUint32WithSmallInt = _TSTypeForge.PositiveUint32WithSmallInt;
   type NonZeroUint32WithSmallInt = _TSTypeForge.NonZeroUint32WithSmallInt;
-  type MaxLengthString<MaxLength extends number> =
+  type MaxLengthString<MaxLength extends SupportedLength> =
     _TSTypeForge.MaxLengthString<MaxLength>;
-  type MinLengthString<MinLength extends number> =
+  type MinLengthString<MinLength extends SupportedLength> =
     _TSTypeForge.MinLengthString<MinLength>;
   type BoundedLengthString<
-    MinLength extends number,
-    MaxLength extends number,
+    MinLength extends SupportedLength,
+    MaxLength extends SupportedLength,
   > = _TSTypeForge.BoundedLengthString<MinLength, MaxLength>;
-  type FixedLengthString<Length extends number> =
+  type FixedLengthString<Length extends SupportedLength> =
     _TSTypeForge.FixedLengthString<Length>;
   type NonEmptyString = _TSTypeForge.NonEmptyString;
+  type SupportedLengthCap = _TSTypeForge.SupportedLengthCap;
+  type SupportedLength = _TSTypeForge.SupportedLength;
   type TypeEq<A, B> = _TSTypeForge.TypeEq<A, B>;
   type TypeExtends<A, B> = _TSTypeForge.TypeExtends<A, B>;
   type IsFixedLengthList<T extends readonly unknown[]> =

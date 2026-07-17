@@ -4,43 +4,22 @@ import {
 } from '../../tuple-and-list/index.mjs';
 import { type UintRangeInclusive } from '../../type-level-integer/index.mjs';
 import { type TSTypeForgeInternals_BrandEncapsulated } from '../_internals.mjs';
+import { type SupportedLength } from '../supported-length.mjs';
 
 /**
- * @internal The inclusive upper bound of length parameters accepted by the
- * branded length-constrained array types. Kept well below the compiler limits
- * that the brand encoding relies on (tuple types are capped at 10,000
- * elements), so that an excessive length fails with a clear constraint error
- * instead of a cryptic deep-instantiation error, and so that the worst-case
- * cost of a single brand stays bounded.
- */
-type SupportedArrayLengthCap = 2048;
-
-/**
- * Union of the length values (`0 | 1 | ... | 2048`) accepted by the length
- * parameters of {@link MaxLengthArray}, {@link MinLengthArray},
- * {@link BoundedLengthArray}, and {@link FixedLengthArray}.
- *
- * The constraint costs almost nothing for the type checker: the union is
- * constructed once per program and cached, and each instantiation only adds a
- * single union-membership check. Its purpose is to reject length literals for
- * which the brand encoding would break down (tuple types are capped at 10,000
- * elements) with a readable constraint error, and to reject non-literal
- * `number`, for which the brand would be meaningless.
- */
-export type SupportedArrayLength = UintRangeInclusive<
-  0,
-  SupportedArrayLengthCap
->;
-
-/**
- * @internal Upper bound (inclusive) of the structural tuple prefix embedded in
+ * Upper bound (inclusive, `10`) of the structural tuple prefix embedded in
  * {@link MinLengthArray} (and, via composition, in {@link BoundedLengthArray}
- * and {@link FixedLengthArray}). The prefix is what makes indexed access below
- * the minimum length not include `undefined` under
- * `noUncheckedIndexedAccess`. It is kept small so that the prefix stays cheap
- * for the type checker even when the element type is large.
+ * and {@link FixedLengthArray}) — i.e. the boundary between "expand the
+ * minimum length into tuple positions" and "fall back to `readonly Elm[]`".
+ * The prefix is what makes indexed access below the minimum length not
+ * include `undefined` under `noUncheckedIndexedAccess`. It is kept small so
+ * that the prefix stays cheap for the type checker even when the element type
+ * is large.
+ *
+ * Exported so that downstream libraries can share the same boundary instead
+ * of hard-coding their own.
  */
-type StructuralPrefixCap = 10;
+export type StructuralPrefixCap = 10;
 
 /**
  * @internal Clamps `N` to {@link StructuralPrefixCap}. Monotone in `N`, so the
@@ -76,7 +55,7 @@ type ClampToPrefixCap<N extends number> =
  *
  * @example
  * ```ts
- * const isMaxLengthArray = <N extends SupportedArrayLength, E>(
+ * const isMaxLengthArray = <N extends SupportedLength, E>(
  *   xs: readonly E[],
  *   maxLength: N,
  * ): xs is MaxLengthArray<N, E> => xs.length <= maxLength;
@@ -89,7 +68,7 @@ type ClampToPrefixCap<N extends number> =
  * ```
  */
 export type MaxLengthArray<
-  MaxLength extends SupportedArrayLength,
+  MaxLength extends SupportedLength,
   Elm = unknown,
 > = readonly Elm[] &
   TSTypeForgeInternals_BrandEncapsulated<
@@ -128,7 +107,7 @@ export type MaxLengthArray<
  *
  * @example
  * ```ts
- * const isMinLengthArray = <N extends SupportedArrayLength, E>(
+ * const isMinLengthArray = <N extends SupportedLength, E>(
  *   xs: readonly E[],
  *   minLength: N,
  * ): xs is MinLengthArray<N, E> => xs.length >= minLength;
@@ -141,7 +120,7 @@ export type MaxLengthArray<
  * ```
  */
 export type MinLengthArray<
-  MinLength extends SupportedArrayLength,
+  MinLength extends SupportedLength,
   Elm = unknown,
 > = MinLengthTuple<ClampToPrefixCap<MinLength>, Elm> &
   TSTypeForgeInternals_BrandEncapsulated<
@@ -179,8 +158,8 @@ export type MinLengthArray<
  * ```
  */
 export type BoundedLengthArray<
-  MinLength extends SupportedArrayLength,
-  MaxLength extends SupportedArrayLength,
+  MinLength extends SupportedLength,
+  MaxLength extends SupportedLength,
   Elm = unknown,
 > = MaxLengthArray<MaxLength, Elm> & MinLengthArray<MinLength, Elm>;
 
@@ -216,7 +195,7 @@ export type BoundedLengthArray<
  * ```
  */
 export type FixedLengthArray<
-  Length extends SupportedArrayLength,
+  Length extends SupportedLength,
   Elm = unknown,
 > = BoundedLengthArray<Length, Length, Elm> &
   (Length extends UintRangeInclusive<0, StructuralPrefixCap>

@@ -1,8 +1,8 @@
-import { type MinLengthArray, type SupportedArrayLength } from 'ts-type-forge';
+import { type MinLengthArray, type SupportedLength } from 'ts-type-forge';
 
 // embed-sample-code-ignore-above
 
-const isMinLengthArray = <N extends SupportedArrayLength, E>(
+const isMinLengthArray = <N extends SupportedLength, E>(
   xs: readonly E[],
   minLength: N,
 ): xs is MinLengthArray<N, E> => xs.length >= minLength;

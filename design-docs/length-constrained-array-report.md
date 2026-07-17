@@ -75,11 +75,21 @@ type FixedLengthArray<Length, Elm> = BoundedLengthArray<Length, Length, Elm> &
 - brand キー(`MaxLength` / `MinLength`)は文字列版と同名だが、ベース型(`string` vs 配列)が
   異なるため相互代入は起きない(テストで担保)。
 - 再帰深度制限と無縁で、N = 1000 以上でも動作する(N=1000/2000 のテストあり)。
-- 長さ型引数は `SupportedArrayLength`(`0 | 1 | ... | 2048`)に制約した。brand のエンコーディングが
-  依存するタプル型のコンパイラ上限(10,000 要素)に達する前に、超過リテラルや非リテラル `number` を
-  読みやすい制約エラーで弾くため。制約 union はプログラム全体で 1 回だけ構築・キャッシュされ、
+- 長さ型引数は `SupportedLength`(`0 | 1 | ... | 2048`、上限は exported な
+  `SupportedLengthCap = 2048`)に制約した。brand のエンコーディングが依存するタプル型の
+  コンパイラ上限(10,000 要素)に達する前に、超過リテラルや非リテラル `number` を読みやすい
+  制約エラーで弾くため。制約 union はプログラム全体で 1 回だけ構築・キャッシュされ、
   インスタンス化ごとの追加コストは union メンバーシップ判定 1 回のみ(実測で使用回数比例の
-  コスト増なし・一回限りの固定コスト約 +7k types のみ)。
+  コスト増なし・一回限りの固定コスト約 +7k types のみ)。この cap は**文字列 family
+  (`MaxLengthString` 等)にも適用**し、境界定義を 3 リポジトリで共通化した:
+    - ts-type-forge: `SupportedLengthCap` / `SupportedLength` / `StructuralPrefixCap`
+      (構造的タプル接頭辞化と `readonly Elm[]` フォールバックの境界 = 10)を export。
+    - ts-data-forge: `is*` / `as*` の長さ引数制約を `SupportedLength` に統一(配列・文字列とも)。
+    - ts-fortress: branded バリデータの長さ制約を `SmallUint`(≤39)から `SupportedLength`(≤2048)へ
+      拡大。`string()` の brand エンコード可能範囲も `SmallInt<'>0'>`(1..39)から
+      `1..2048` に拡大(範囲判定は `infer M extends SupportedLengthLiteral` で行い、
+      TS7(native)の複雑度制限 TS2859 を回避)。構造的タプル版バリデータのみ従来どおり
+      `SmallUint` を上限とする(タプル展開の実行上限のため)。
 
 ## 3. ハイブリッド構造(第2版): 添字アクセスの `undefined` 除去
 
