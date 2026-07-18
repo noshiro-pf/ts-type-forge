@@ -54,6 +54,10 @@ declare global {
     MinLength extends SupportedLength,
     Elm = unknown,
   > = _TSTypeForge.MinLengthArray<MinLength, Elm>;
+  type MutableMinLengthArray<
+    MinLength extends SupportedLength,
+    Elm = unknown,
+  > = _TSTypeForge.MutableMinLengthArray<MinLength, Elm>;
   type BoundedLengthArray<
     MinLength extends SupportedLength,
     MaxLength extends SupportedLength,
@@ -322,8 +326,10 @@ declare global {
     R,
     Path extends RecordPathsWithIndex<R>,
   > = _TSTypeForge.RecordValueAtPathWithIndex<R, Path>;
-  type MutableNonEmptyArray<A> = _TSTypeForge.MutableNonEmptyArray<A>;
+  type MutableNonEmptyTuple<A> = _TSTypeForge.MutableNonEmptyTuple<A>;
+  type NonEmptyTuple<A> = _TSTypeForge.NonEmptyTuple<A>;
   type NonEmptyArray<A> = _TSTypeForge.NonEmptyArray<A>;
+  type MutableNonEmptyArray<A> = _TSTypeForge.MutableNonEmptyArray<A>;
   type ArrayElement<S> = _TSTypeForge.ArrayElement<S>;
   type IndexOfTuple<T extends readonly unknown[]> =
     _TSTypeForge.IndexOfTuple<T>;

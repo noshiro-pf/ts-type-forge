@@ -7,6 +7,7 @@ import {
   type FixedLengthArray,
   type MaxLengthArray,
   type MinLengthArray,
+  type MutableMinLengthArray,
 } from './length-constrained-array.mjs';
 
 // MaxLengthArray
@@ -106,6 +107,41 @@ import {
     MinLengthArray<3, number>,
     readonly [number, number, number, ...(readonly number[])]
   >('<=');
+}
+
+// MutableMinLengthArray
+
+{
+  expectType<
+    MutableMinLengthArray<3, number>,
+    [number, number, number, ...number[]] &
+      Readonly<{
+        MinLength: readonly [0, 0, 0, ...(readonly 0[])];
+      }> &
+      Readonly<{
+        'TSTypeForgeInternals--edd2f9ce-7ca5-45b0-9d1a-bd61b9b5d9c3': unknown;
+      }>
+  >('=');
+
+  // Reflexivity
+  expectType<
+    MutableMinLengthArray<3, number>,
+    MutableMinLengthArray<3, number>
+  >('=');
+
+  // Same length-bound subtyping as the readonly variant
+  expectType<
+    MutableMinLengthArray<5, number>,
+    MutableMinLengthArray<3, number>
+  >('<=');
+
+  // Assignable to the readonly MinLengthArray of the same bound
+  expectType<MutableMinLengthArray<3, number>, MinLengthArray<3, number>>('<=');
+
+  // ... but the readonly variant is not assignable to the mutable one
+  expectType<MinLengthArray<3, number>, MutableMinLengthArray<3, number>>(
+    '!<=',
+  );
 }
 
 // Indexed access below the (clamped) minimum length does not include

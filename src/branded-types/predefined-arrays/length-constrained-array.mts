@@ -1,6 +1,7 @@
 import {
   type FixedLengthTuple,
   type MinLengthTuple,
+  type MutableMinLengthTuple,
 } from '../../tuple-and-list/index.mjs';
 import { type UintRangeInclusive } from '../../type-level-integer/index.mjs';
 import { type TSTypeForgeInternals_BrandEncapsulated } from '../_internals.mjs';
@@ -133,6 +134,43 @@ export type MinLengthArray<
   MinLength extends SupportedLength,
   Elm = unknown,
 > = MinLengthTuple<ClampToPrefixCap<MinLength>, Elm> &
+  TSTypeForgeInternals_BrandEncapsulated<
+    Readonly<{
+      MinLength: MinLengthTuple<MinLength, 0>;
+    }>
+  >;
+
+/**
+ * Mutable counterpart of {@link MinLengthArray}: a branded *mutable* array type
+ * for arrays with at least `MinLength` elements.
+ *
+ * Identical to {@link MinLengthArray} except that the clamped structural prefix
+ * is mutable ({@link MutableMinLengthTuple} instead of {@link MinLengthTuple}),
+ * so elements can be reassigned. The brand is the same, so a
+ * `MutableMinLengthArray<M, Elm>` is assignable to `MinLengthArray<M, Elm>`.
+ *
+ * This is the mutable, brand-based counterpart of the structural tuple-based
+ * `MutableMinLengthTuple`; type-checking cost stays essentially independent of
+ * the size of `Elm` and of the bound.
+ *
+ * @template MinLength - The minimum number of elements (inclusive). Must be a
+ *   non-negative integer literal.
+ * @template Elm - The type of elements in the array (defaults to `unknown`).
+ *
+ * @example
+ * ```ts
+ * const history = [0, 1, 2, 3] as unknown as MutableMinLengthArray<3, number>;
+ *
+ * history[0] = 10; // OK — elements are mutable
+ * const first: number = history[0]; // OK — no `undefined` below min(N, 10)
+ * const readonlyView: MinLengthArray<3, number> = history; // OK
+ * // const longer: MutableMinLengthArray<5, number> = history; // Error! (3 < 5)
+ * ```
+ */
+export type MutableMinLengthArray<
+  MinLength extends SupportedLength,
+  Elm = unknown,
+> = MutableMinLengthTuple<ClampToPrefixCap<MinLength>, Elm> &
   TSTypeForgeInternals_BrandEncapsulated<
     Readonly<{
       MinLength: MinLengthTuple<MinLength, 0>;
