@@ -50,6 +50,10 @@ declare global {
     MaxLength extends SupportedLength,
     Elm = unknown,
   > = _TSTypeForge.MaxLengthArray<MaxLength, Elm>;
+  type MutableMaxLengthArray<
+    MaxLength extends SupportedLength,
+    Elm = unknown,
+  > = _TSTypeForge.MutableMaxLengthArray<MaxLength, Elm>;
   type MinLengthArray<
     MinLength extends SupportedLength,
     Elm = unknown,
@@ -63,10 +67,19 @@ declare global {
     MaxLength extends SupportedLength,
     Elm = unknown,
   > = _TSTypeForge.BoundedLengthArray<MinLength, MaxLength, Elm>;
+  type MutableBoundedLengthArray<
+    MinLength extends SupportedLength,
+    MaxLength extends SupportedLength,
+    Elm = unknown,
+  > = _TSTypeForge.MutableBoundedLengthArray<MinLength, MaxLength, Elm>;
   type FixedLengthArray<
     Length extends SupportedLength,
     Elm = unknown,
   > = _TSTypeForge.FixedLengthArray<Length, Elm>;
+  type MutableFixedLengthArray<
+    Length extends SupportedLength,
+    Elm = unknown,
+  > = _TSTypeForge.MutableFixedLengthArray<Length, Elm>;
   type BigInt64 = _TSTypeForge.BigInt64;
   type BigUint64 = _TSTypeForge.BigUint64;
   type NaNType = _TSTypeForge.NaNType;
