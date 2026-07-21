@@ -110,7 +110,7 @@
     "ts-data-forge": "10.0.0",
     "ts-fortress": "10.0.0",
     "ts-repo-utils": "10.1.2",
-    "tsx": "4.23.0",
+    "tsx": "4.23.1",
     "typedoc": "0.28.20",
     "typedoc-github-theme": "0.4.0",
     "typescript": "6.0.3",
