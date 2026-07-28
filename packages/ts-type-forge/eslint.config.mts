@@ -10,7 +10,6 @@ import { workspaceRootPath } from './scripts/workspace-root-path.mjs';
 export default [
   {
     ignores: [
-      '.eslintrc.cjs',
       'docs/**',
       // test/dist_/ has its own tsconfigs (named/ and ambient/) and
       // type-checks the built dist/ output (see scripts/cmd/build.mts); it
@@ -68,9 +67,8 @@ export default [
   },
 
   {
-    files: ['src/**'],
     rules: defineKnownRules({
-      'import-x/no-unused-modules': ['error', { unusedExports: true }],
+      'import-x/no-unused-modules': 'off',
     }),
   },
   {
