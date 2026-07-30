@@ -27,10 +27,12 @@ type C = ChangeArrayElement<MinLengthArray<3, number>, string>;
 ```
 
 Both bounds are recovered from the brand by counting it back, so nothing extra
-is instantiated: `MinLengthOf` peels the encoded tuple's fixed prefix and
-`MaxLengthOf` peels the encoded range's members. The recursion is one step per
-unit of the bound, which keeps it well inside TypeScript's instantiation-depth
-limit for realistic bounds but makes it unsuitable for bounds in the thousands.
+is instantiated: `MinLengthOf` peels the encoded tuple's fixed prefix, and
+`MaxLengthOf` walks up from `0` testing membership of the encoded range, which
+it leaves intact (rebuilding a smaller union with `Exclude` at every step would
+make the walk quadratic in the bound). Both are one cheap step per unit of the
+bound, which keeps them well inside TypeScript's instantiation-depth limit for
+realistic bounds but makes them unsuitable for bounds in the thousands.
 
 `ChangeArrayElement` exists because the obvious homomorphic mapped type cannot
 do the job: a length-constrained array is an intersection of a tuple and the

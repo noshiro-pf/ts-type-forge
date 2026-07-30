@@ -5,7 +5,10 @@ import {
   type MinLengthTuple,
 } from '../../tuple-and-list/index.mjs';
 import { type UintRangeInclusive } from '../../type-level-integer/index.mjs';
-import { type StructuralPrefixCap } from './length-constrained-array.mjs';
+import {
+  type MaxLengthArray,
+  type StructuralPrefixCap,
+} from './length-constrained-array.mjs';
 
 /**
  * Whether `Ar` carries a length-constraint brand — i.e. whether it came from the
@@ -77,10 +80,12 @@ export type MinLengthOf<Ar extends readonly unknown[]> =
  *
  * The bound is recovered from the brand rather than remembered separately: the
  * brand encodes it as the union `UintRangeInclusive<0, MaxLength>` so that the
- * natural subtyping relation between constraints is preserved, and this counts
- * that union's members back. The union is already materialized by the brand
- * itself, so nothing extra is instantiated; as with {@link MinLengthOf}, the
- * recursion is one step per unit of `MaxLength`.
+ * natural subtyping relation between constraints is preserved, and this walks
+ * up from `0` until the union stops containing the current value. The union is
+ * already materialized by the brand itself and is left intact — testing
+ * membership rather than rebuilding a smaller union at every step is what keeps
+ * the walk linear rather than quadratic in `MaxLength`. As with
+ * {@link MinLengthOf}, it is one cheap step per unit of the bound.
  *
  * @template Ar - The array type to inspect.
  *
@@ -174,18 +179,28 @@ type CountFixedPrefix<
   : Counter['length'];
 
 /**
- * @internal Counts the members of a contiguous `0 | 1 | ... | Max` union back to
- * `Max`, by removing the current counter value one step at a time.
+ * @internal Counts a contiguous `0 | 1 | ... | Max` union back to `Max`, by
+ * walking up from `0` and stopping at the first value the union does not
+ * contain.
+ *
+ * Each step is a *membership* test against the union, left intact — not an
+ * `Exclude`, which would rebuild a smaller union at every step and make the
+ * whole walk quadratic in `Max`.
  */
 type CountContiguousUintUnion<
   Allowed extends number,
   Counter extends readonly 0[] = [],
-> = [Exclude<Allowed, Counter['length']>] extends [never]
-  ? Counter['length']
-  : CountContiguousUintUnion<
-      Exclude<Allowed, Counter['length']>,
-      [...Counter, 0]
-    >;
+> = [Counter['length']] extends [Allowed]
+  ? CountContiguousUintUnion<Allowed, [...Counter, 0]>
+  : PreviousLength<Counter>;
+
+/** @internal The length `Counter` had one step earlier. */
+type PreviousLength<Counter extends readonly 0[]> = Counter extends readonly [
+  unknown,
+  ...infer Rest,
+]
+  ? Rest['length']
+  : never;
 
 /**
  * @internal The structural part to pair a recovered brand with: the exact tuple
@@ -201,12 +216,18 @@ type ConstrainedStructureOf<Ar extends readonly unknown[], Elm> =
 /**
  * @internal Whether `Ar`'s bounds pin one length at or below the cap.
  *
+ * The upper bound is compared without computing {@link MaxLengthOf}: `Ar` is
+ * assignable to `MaxLengthArray<L, unknown>` exactly when its maximum is at
+ * most `L`, and its minimum is already `L`, so the two bounds must coincide.
+ * That keeps this off the (linear) bound-recovery path — the only instantiation
+ * it adds is a `UintRangeInclusive<0, L>` with `L` clamped to the cap.
+ *
  * `TypeExtends` rather than a bare conditional: both operands are computed
  * types, never a naked type parameter, so nothing distributes either way.
  */
 type IsExactLengthWithinCap<Ar extends readonly unknown[]> = BoolAnd<
-  TypeExtends<MinLengthOf<Ar>, MaxLengthOf<Ar>>,
-  TypeExtends<MinLengthOf<Ar>, UintRangeInclusive<0, StructuralPrefixCap>>
+  TypeExtends<MinLengthOf<Ar>, UintRangeInclusive<0, StructuralPrefixCap>>,
+  TypeExtends<Ar, MaxLengthArray<ClampToPrefixCap<MinLengthOf<Ar>>, unknown>>
 >;
 
 /** @internal Clamps `N` to {@link StructuralPrefixCap}. */

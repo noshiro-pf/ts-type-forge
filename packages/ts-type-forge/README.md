@@ -487,11 +487,11 @@ For detailed information on all types, see the [Full API Reference](./docs/READM
     - [IntersectBrand](./src/branded-types/brand.mts#L247)
     - [NormalizeBrandUnion](./src/branded-types/brand.mts#L272)
 - src/branded-types/predefined-arrays/length-constrained-array-bounds.mts
-    - [HasLengthConstraint](./src/branded-types/predefined-arrays/length-constrained-array-bounds.mts#L24)
-    - [LengthConstraintBrandOf](./src/branded-types/predefined-arrays/length-constrained-array-bounds.mts#L39)
-    - [MinLengthOf](./src/branded-types/predefined-arrays/length-constrained-array-bounds.mts#L68)
-    - [MaxLengthOf](./src/branded-types/predefined-arrays/length-constrained-array-bounds.mts#L96)
-    - [ChangeArrayElement](./src/branded-types/predefined-arrays/length-constrained-array-bounds.mts#L134)
+    - [HasLengthConstraint](./src/branded-types/predefined-arrays/length-constrained-array-bounds.mts#L27)
+    - [LengthConstraintBrandOf](./src/branded-types/predefined-arrays/length-constrained-array-bounds.mts#L42)
+    - [MinLengthOf](./src/branded-types/predefined-arrays/length-constrained-array-bounds.mts#L71)
+    - [MaxLengthOf](./src/branded-types/predefined-arrays/length-constrained-array-bounds.mts#L101)
+    - [ChangeArrayElement](./src/branded-types/predefined-arrays/length-constrained-array-bounds.mts#L139)
 - src/branded-types/predefined-arrays/length-constrained-array.mts
     - [StructuralPrefixCap](./src/branded-types/predefined-arrays/length-constrained-array.mts#L26)
     - [StructuralPrefixLength](./src/branded-types/predefined-arrays/length-constrained-array.mts#L36)
