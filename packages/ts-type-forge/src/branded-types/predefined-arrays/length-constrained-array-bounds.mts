@@ -1,4 +1,5 @@
-import { type IsNever } from '../../condition/index.mjs';
+import { type IsNever, type TypeExtends } from '../../condition/index.mjs';
+import { type BoolAnd, type BoolNot } from '../../others/index.mjs';
 import {
   type FixedLengthTuple,
   type MinLengthTuple,
@@ -20,8 +21,9 @@ import { type StructuralPrefixCap } from './length-constrained-array.mjs';
  * type C = HasLengthConstraint<readonly string[]>; // false
  * ```
  */
-export type HasLengthConstraint<Ar extends readonly unknown[]> =
-  IsNever<LengthConstraintKeysOf<Ar>> extends true ? false : true;
+export type HasLengthConstraint<Ar extends readonly unknown[]> = BoolNot<
+  IsNever<LengthConstraintKeysOf<Ar>>
+>;
 
 /**
  * The length-constraint brand carried by `Ar`, as an object type — the members
@@ -196,13 +198,16 @@ type ConstrainedStructureOf<Ar extends readonly unknown[], Elm> =
     ? FixedLengthTuple<MinLengthOf<Ar>, Elm>
     : MinLengthTuple<ClampToPrefixCap<MinLengthOf<Ar>>, Elm>;
 
-/** @internal Whether `Ar`'s bounds pin one length at or below the cap. */
-type IsExactLengthWithinCap<Ar extends readonly unknown[]> =
-  MinLengthOf<Ar> extends MaxLengthOf<Ar>
-    ? MinLengthOf<Ar> extends UintRangeInclusive<0, StructuralPrefixCap>
-      ? true
-      : false
-    : false;
+/**
+ * @internal Whether `Ar`'s bounds pin one length at or below the cap.
+ *
+ * `TypeExtends` rather than a bare conditional: both operands are computed
+ * types, never a naked type parameter, so nothing distributes either way.
+ */
+type IsExactLengthWithinCap<Ar extends readonly unknown[]> = BoolAnd<
+  TypeExtends<MinLengthOf<Ar>, MaxLengthOf<Ar>>,
+  TypeExtends<MinLengthOf<Ar>, UintRangeInclusive<0, StructuralPrefixCap>>
+>;
 
 /** @internal Clamps `N` to {@link StructuralPrefixCap}. */
 type ClampToPrefixCap<N extends number> =
