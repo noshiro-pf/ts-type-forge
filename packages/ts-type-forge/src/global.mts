@@ -397,23 +397,23 @@ declare global {
   type IndexInclusive<N extends number> = _TSTypeForge.IndexInclusive<N>;
   type NegativeIndex<N extends number> = _TSTypeForge.NegativeIndex<N>;
   type IntRange<
-    Start extends Int8,
-    End extends Int8 | 128,
+    Start extends Int10,
+    End extends Int10 | 512,
   > = _TSTypeForge.IntRange<Start, End>;
   type IntRangeInclusive<
-    MinValue extends Int8,
-    MaxValue extends Int8,
+    MinValue extends Int10,
+    MaxValue extends Int10,
   > = _TSTypeForge.IntRangeInclusive<MinValue, MaxValue>;
   type Max<N extends Uint10> = _TSTypeForge.Max<N>;
   type Min<N extends Uint10> = _TSTypeForge.Min<N>;
   type Seq<N extends number> = _TSTypeForge.Seq<N>;
   type UintRange<
-    Start extends number,
-    End extends number,
+    Start extends Uint10,
+    End extends Uint10 | 1024,
   > = _TSTypeForge.UintRange<Start, End>;
   type UintRangeInclusive<
-    MinValue extends number,
-    MaxValue extends number,
+    MinValue extends Uint10,
+    MaxValue extends Uint10,
   > = _TSTypeForge.UintRangeInclusive<MinValue, MaxValue>;
   namespace List {
     export type Head<

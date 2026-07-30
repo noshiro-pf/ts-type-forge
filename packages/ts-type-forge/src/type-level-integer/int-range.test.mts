@@ -42,6 +42,16 @@ expectType<128, IntRange<-128, 128>>('!<=');
 
 expectType<-129, IntRange<-128, 128>>('!<=');
 
+// the `Int10` bound: `512` is accepted only as an exclusive end
+expectType<-512, IntRange<-512, 512>>('<=');
+
+expectType<511, IntRange<-512, 512>>('<=');
+
+expectType<512, IntRange<-512, 512>>('!<=');
+
+// @ts-expect-error `-513` is below the `Int10` cap
+expectType<511, IntRange<-513, 512>>('<=');
+
 expectType<IntRangeInclusive<1, 5>, 1 | 2 | 3 | 4 | 5>('=');
 
 expectType<IntRangeInclusive<-3, 3>, -3 | -2 | -1 | 0 | 1 | 2 | 3>('=');
@@ -83,3 +93,11 @@ expectType<0, IntRangeInclusive<-128, 127>>('<=');
 expectType<127, IntRangeInclusive<-128, 127>>('<=');
 
 expectType<-129, IntRangeInclusive<-128, 127>>('!<=');
+
+// the `Int10` bound: an inclusive upper bound never needs `512`
+expectType<-512, IntRangeInclusive<-512, 511>>('<=');
+
+expectType<511, IntRangeInclusive<-512, 511>>('<=');
+
+// @ts-expect-error `512` is above the `Int10` cap
+expectType<511, IntRangeInclusive<-512, 512>>('<=');

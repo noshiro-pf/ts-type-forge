@@ -7,6 +7,7 @@ expectType<UintRange<0, 0>, never>('=');
 
 expectType<UintRange<0, 1>, 0>('=');
 
+// @ts-expect-error non-integer bounds are not `Uint10`s
 expectType<UintRange<1.2, 3.4>, never>('=');
 
 expectType<UintRange<0, 5>, 0 | 1 | 2 | 3 | 4>('=');
@@ -26,10 +27,13 @@ expectType<UintRangeInclusive<0, 0>, 0>('=');
 
 expectType<UintRangeInclusive<0, 1>, 0 | 1>('=');
 
+// @ts-expect-error non-integer bounds are not `Uint10`s
 expectType<UintRangeInclusive<1.2, 3.4>, never>('=');
 
+// @ts-expect-error a negative bound is not a `Uint10`
 expectType<UintRangeInclusive<0, -1>, never>('=');
 
+// @ts-expect-error non-literal `number` is not a `Uint10`
 expectType<UintRangeInclusive<number, number>, never>('=');
 
 expectType<UintRangeInclusive<0, 5>, 0 | 1 | 2 | 3 | 4 | 5>('=');
@@ -42,3 +46,11 @@ expectType<0, UintRangeInclusive<0, 100>>('<=');
 expectType<100, UintRangeInclusive<0, 100>>('<=');
 
 expectType<101, UintRangeInclusive<0, 100>>('!<=');
+
+// the `Uint10` bound: `1024` is accepted only as an exclusive end
+expectType<1023, UintRange<0, 1024>>('<=');
+
+expectType<1023, UintRangeInclusive<0, 1023>>('<=');
+
+// @ts-expect-error `1024` is above the `Uint10` cap
+expectType<1023, UintRangeInclusive<0, 1024>>('<=');

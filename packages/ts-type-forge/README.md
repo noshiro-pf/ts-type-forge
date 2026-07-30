@@ -487,16 +487,16 @@ For detailed information on all types, see the [Full API Reference](./docs/READM
     - [IntersectBrand](./src/branded-types/brand.mts#L247)
     - [NormalizeBrandUnion](./src/branded-types/brand.mts#L272)
 - src/branded-types/predefined-arrays/length-constrained-array.mts
-    - [StructuralPrefixCap](./src/branded-types/predefined-arrays/length-constrained-array.mts#L26)
-    - [StructuralPrefixLength](./src/branded-types/predefined-arrays/length-constrained-array.mts#L36)
-    - [MaxLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L94)
-    - [MutableMaxLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L133)
-    - [MinLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L197)
-    - [MutableMinLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L237)
-    - [BoundedLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L278)
-    - [MutableBoundedLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L313)
-    - [FixedLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L351)
-    - [MutableFixedLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L388)
+    - [StructuralPrefixCap](./src/branded-types/predefined-arrays/length-constrained-array.mts#L29)
+    - [StructuralPrefixLength](./src/branded-types/predefined-arrays/length-constrained-array.mts#L39)
+    - [MaxLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L97)
+    - [MutableMaxLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L136)
+    - [MinLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L200)
+    - [MutableMinLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L240)
+    - [BoundedLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L281)
+    - [MutableBoundedLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L316)
+    - [FixedLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L354)
+    - [MutableFixedLengthArray](./src/branded-types/predefined-arrays/length-constrained-array.mts#L391)
 - src/branded-types/predefined-numbers/bigint.mts
     - [BigInt64](./src/branded-types/predefined-numbers/bigint.mts#L18)
     - [BigUint64](./src/branded-types/predefined-numbers/bigint.mts#L33)
@@ -606,7 +606,7 @@ For detailed information on all types, see the [Full API Reference](./docs/READM
     - [NonEmptyString](./src/branded-types/predefined-strings/non-empty-string.mts#L21)
 - src/branded-types/supported-length.mts
     - [SupportedLengthCap](./src/branded-types/supported-length.mts#L18)
-    - [SupportedLength](./src/branded-types/supported-length.mts#L31)
+    - [SupportedLength](./src/branded-types/supported-length.mts#L35)
 - src/condition/eq.mts
     - [TypeEq](./src/condition/eq.mts#L23)
 - src/condition/extends.mts
@@ -789,8 +789,8 @@ For detailed information on all types, see the [Full API Reference](./docs/READM
     - [IndexInclusive](./src/type-level-integer/index-type.mts#L29)
     - [NegativeIndex](./src/type-level-integer/index-type.mts#L45)
 - src/type-level-integer/int-range.mts
-    - [IntRange](./src/type-level-integer/int-range.mts#L31)
-    - [IntRangeInclusive](./src/type-level-integer/int-range.mts#L73)
+    - [IntRange](./src/type-level-integer/int-range.mts#L32)
+    - [IntRangeInclusive](./src/type-level-integer/int-range.mts#L79)
 - src/type-level-integer/max.mts
     - [Max](./src/type-level-integer/max.mts#L16)
 - src/type-level-integer/min.mts
@@ -798,8 +798,8 @@ For detailed information on all types, see the [Full API Reference](./docs/READM
 - src/type-level-integer/seq.mts
     - [Seq](./src/type-level-integer/seq.mts#L15)
 - src/type-level-integer/uint-range.mts
-    - [UintRange](./src/type-level-integer/uint-range.mts#L16)
-    - [UintRangeInclusive](./src/type-level-integer/uint-range.mts#L33)
+    - [UintRange](./src/type-level-integer/uint-range.mts#L22)
+    - [UintRangeInclusive](./src/type-level-integer/uint-range.mts#L47)
 
 <!-- AUTO-GENERATED TYPES END -->
 
