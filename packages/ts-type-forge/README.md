@@ -486,6 +486,12 @@ For detailed information on all types, see the [Full API Reference](./docs/READM
     - [ChangeBaseBrand](./src/branded-types/brand.mts#L220)
     - [IntersectBrand](./src/branded-types/brand.mts#L247)
     - [NormalizeBrandUnion](./src/branded-types/brand.mts#L272)
+- src/branded-types/predefined-arrays/length-constrained-array-bounds.mts
+    - [HasLengthConstraint](./src/branded-types/predefined-arrays/length-constrained-array-bounds.mts#L23)
+    - [LengthConstraintBrandOf](./src/branded-types/predefined-arrays/length-constrained-array-bounds.mts#L37)
+    - [MinLengthOf](./src/branded-types/predefined-arrays/length-constrained-array-bounds.mts#L66)
+    - [MaxLengthOf](./src/branded-types/predefined-arrays/length-constrained-array-bounds.mts#L94)
+    - [ChangeArrayElement](./src/branded-types/predefined-arrays/length-constrained-array-bounds.mts#L132)
 - src/branded-types/predefined-arrays/length-constrained-array.mts
     - [StructuralPrefixCap](./src/branded-types/predefined-arrays/length-constrained-array.mts#L26)
     - [StructuralPrefixLength](./src/branded-types/predefined-arrays/length-constrained-array.mts#L36)
