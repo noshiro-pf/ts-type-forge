@@ -1,5 +1,5 @@
 import { type TypeExtends } from '../condition/index.mjs';
-import { type Int10, type Uint10 } from '../constants/index.mjs';
+import { type Int11, type Uint11 } from '../constants/index.mjs';
 import { type BoolAnd, type RelaxedExclude } from '../others/index.mjs';
 import { type Abs } from './abs.mjs';
 import {
@@ -13,9 +13,9 @@ import { type UintRange, type UintRangeInclusive } from './uint-range.mjs';
  * Creates a union of integer literals starting from `Start` (inclusive) up to
  * `End` (exclusive). Unlike {@link UintRange}, the bounds may be negative.
  *
- * The bounds are limited to the signed 10-bit range: `Start` must be an `Int10`
- * (`-512` to `511`) and `End` must be an `Int10` or `512`, so that a bound the
- * union cannot represent fails with a readable constraint error instead of
+ * The bounds are limited to the signed 11-bit range: `Start` must be an `Int11`
+ * (`-1024` to `1023`) and `End` must be an `Int11` or `1024`, so that a bound
+ * the union cannot represent fails with a readable constraint error instead of
  * resolving to `never`. Ranges where `Start >= End` (including a positive
  * `Start` with a negative `End`) resolve to `never`.
  *
@@ -29,15 +29,15 @@ import { type UintRange, type UintRangeInclusive } from './uint-range.mjs';
  * type R4 = IntRange<3, -3>; // never
  * type R5 = IntRange<5, 5>; // never
  */
-export type IntRange<Start extends Int10, End extends Int10 | 512> =
+export type IntRange<Start extends Int11, End extends Int11 | 1024> =
   BoolAnd<
     TypeExtends<Start, PositiveRange>,
     TypeExtends<End, PositiveRange>
   > extends true
-    ? // `& Uint10` is a no-op for every value this branch admits (both bounds
-      // are in `0..512`); it only tells the checker what the branch already
+    ? // `& Uint11` is a no-op for every value this branch admits (both bounds
+      // are in `0..1024`); it only tells the checker what the branch already
       // guarantees, since a conditional type does not narrow a type parameter.
-      UintRange<Start & Uint10, End & Uint10>
+      UintRange<Start & Uint11, End & Uint11>
     : BoolAnd<
           TypeExtends<Start, NegativeRange>,
           TypeExtends<End, PositiveRange>
@@ -60,8 +60,8 @@ export type IntRange<Start extends Int10, End extends Int10 | 512> =
  * to `MaxValue` (inclusive). Unlike {@link UintRangeInclusive}, the bounds may
  * be negative.
  *
- * Both bounds are limited to the signed 10-bit range (`Int10`, `-512` to
- * `511`); an inclusive upper bound never needs the extra `512` that
+ * Both bounds are limited to the signed 11-bit range (`Int11`, `-1024` to
+ * `1023`); an inclusive upper bound never needs the extra `1024` that
  * {@link IntRange}'s exclusive `End` accepts. Ranges where
  * `MinValue > MaxValue` (including a positive `MinValue` with a negative
  * `MaxValue`) resolve to `never`.
@@ -76,13 +76,13 @@ export type IntRange<Start extends Int10, End extends Int10 | 512> =
  * type RI4 = IntRangeInclusive<3, -3>; // never
  * type RI5 = IntRangeInclusive<5, 5>; // 5
  */
-export type IntRangeInclusive<MinValue extends Int10, MaxValue extends Int10> =
+export type IntRangeInclusive<MinValue extends Int11, MaxValue extends Int11> =
   BoolAnd<
     TypeExtends<MinValue, PositiveRange>,
     TypeExtends<MaxValue, PositiveRange>
   > extends true
-    ? // See the `& Uint10` note on `IntRange` above.
-      UintRangeInclusive<MinValue & Uint10, MaxValue & Uint10>
+    ? // See the `& Uint11` note on `IntRange` above.
+      UintRangeInclusive<MinValue & Uint11, MaxValue & Uint11>
     : BoolAnd<
           TypeExtends<MinValue, NegativeRange>,
           TypeExtends<MaxValue, PositiveRange>
@@ -118,10 +118,10 @@ type NegativesCloserToZeroThan<N extends number> = RelaxedExclude<
  * @internal The negative half of the bounds accepted by {@link IntRange} and
  * {@link IntRangeInclusive}.
  */
-type NegativeRange = NegativeIndex<512>;
+type NegativeRange = NegativeIndex<1024>;
 
 /**
  * @internal The non-negative half of the bounds accepted by {@link IntRange}
  * and {@link IntRangeInclusive}.
  */
-type PositiveRange = IndexInclusive<512>;
+type PositiveRange = IndexInclusive<1024>;

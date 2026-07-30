@@ -215,9 +215,11 @@ declare global {
   type Uint8 = _TSTypeForge.Uint8;
   type Uint9 = _TSTypeForge.Uint9;
   type Uint10 = _TSTypeForge.Uint10;
+  type Uint11 = _TSTypeForge.Uint11;
   type Int8 = _TSTypeForge.Int8;
   type Int9 = _TSTypeForge.Int9;
   type Int10 = _TSTypeForge.Int10;
+  type Int11 = _TSTypeForge.Int11;
   type MonthEnum = _TSTypeForge.MonthEnum;
   type MonthIndexEnum = _TSTypeForge.MonthIndexEnum;
   type DateEnum = _TSTypeForge.DateEnum;
@@ -397,23 +399,23 @@ declare global {
   type IndexInclusive<N extends number> = _TSTypeForge.IndexInclusive<N>;
   type NegativeIndex<N extends number> = _TSTypeForge.NegativeIndex<N>;
   type IntRange<
-    Start extends Int10,
-    End extends Int10 | 512,
+    Start extends Int11,
+    End extends Int11 | 1024,
   > = _TSTypeForge.IntRange<Start, End>;
   type IntRangeInclusive<
-    MinValue extends Int10,
-    MaxValue extends Int10,
+    MinValue extends Int11,
+    MaxValue extends Int11,
   > = _TSTypeForge.IntRangeInclusive<MinValue, MaxValue>;
   type Max<N extends Uint10> = _TSTypeForge.Max<N>;
   type Min<N extends Uint10> = _TSTypeForge.Min<N>;
   type Seq<N extends number> = _TSTypeForge.Seq<N>;
   type UintRange<
-    Start extends Uint10,
-    End extends Uint10 | 1024,
+    Start extends Uint11,
+    End extends Uint11 | 2048,
   > = _TSTypeForge.UintRange<Start, End>;
   type UintRangeInclusive<
-    MinValue extends Uint10,
-    MaxValue extends Uint10,
+    MinValue extends Uint11,
+    MaxValue extends Uint11,
   > = _TSTypeForge.UintRangeInclusive<MinValue, MaxValue>;
   namespace List {
     export type Head<
