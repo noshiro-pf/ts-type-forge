@@ -67,6 +67,7 @@ export type {
   Int8,
   Int9,
   IntRange,
+  IntRangeInclusive,
   IntWithSmallInt,
   IntersectBrand,
   Intersection,

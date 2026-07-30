@@ -400,6 +400,10 @@ declare global {
     Start extends Int8,
     End extends Int8 | 128,
   > = _TSTypeForge.IntRange<Start, End>;
+  type IntRangeInclusive<
+    MinValue extends Int8,
+    MaxValue extends Int8,
+  > = _TSTypeForge.IntRangeInclusive<MinValue, MaxValue>;
   type Max<N extends Uint10> = _TSTypeForge.Max<N>;
   type Min<N extends Uint10> = _TSTypeForge.Min<N>;
   type Seq<N extends number> = _TSTypeForge.Seq<N>;
