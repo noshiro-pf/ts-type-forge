@@ -131,7 +131,7 @@ Type-safe array and tuple utilities with functional programming patterns.
 Mathematical operations performed entirely at the type level.
 
 - **Integer Operations** - `Increment`, `Decrement`, `AbsoluteValue`
-- **Ranges** - `UintRange`, `UintRangeInclusive` for precise numeric constraints
+- **Ranges** - `UintRange`, `UintRangeInclusive`, `IntRange` for precise numeric constraints
 - **Comparisons** - `Max`, `Min` for type-level comparisons
 
 ### 🌐 Constants and Primitives
@@ -788,6 +788,8 @@ For detailed information on all types, see the [Full API Reference](./docs/READM
     - [Index](./src/type-level-integer/index-type.mts#L16)
     - [IndexInclusive](./src/type-level-integer/index-type.mts#L29)
     - [NegativeIndex](./src/type-level-integer/index-type.mts#L45)
+- src/type-level-integer/int-range.mts
+    - [IntRange](./src/type-level-integer/int-range.mts#L31)
 - src/type-level-integer/max.mts
     - [Max](./src/type-level-integer/max.mts#L16)
 - src/type-level-integer/min.mts

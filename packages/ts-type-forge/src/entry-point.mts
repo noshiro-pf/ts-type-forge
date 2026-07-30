@@ -66,6 +66,7 @@ export type {
   Int32WithSmallInt,
   Int8,
   Int9,
+  IntRange,
   IntWithSmallInt,
   IntersectBrand,
   Intersection,

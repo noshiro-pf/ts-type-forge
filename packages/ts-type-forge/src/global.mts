@@ -396,6 +396,10 @@ declare global {
   type Index<N extends number> = _TSTypeForge.Index<N>;
   type IndexInclusive<N extends number> = _TSTypeForge.IndexInclusive<N>;
   type NegativeIndex<N extends number> = _TSTypeForge.NegativeIndex<N>;
+  type IntRange<
+    Start extends Int8,
+    End extends Int8 | 128,
+  > = _TSTypeForge.IntRange<Start, End>;
   type Max<N extends Uint10> = _TSTypeForge.Max<N>;
   type Min<N extends Uint10> = _TSTypeForge.Min<N>;
   type Seq<N extends number> = _TSTypeForge.Seq<N>;
