@@ -673,7 +673,7 @@ almost every bug in this area:
 
 - **TypeScript does not treat such an intersection as an array type.** A
   homomorphic mapped type over it (`Readonly<{ [K in keyof Ar]: Elm }>`)
-  maps `length`, the array methods _and_ the brand keys, producing a non-array
+  maps `length`, the array methods *and* the brand keys, producing a non-array
   object. Never map over a possibly-branded array directly — go through
   `ChangeArrayElement<Ar, Elm>`, which rebuilds the structural part from the
   bounds and re-applies the brand, and falls back to the homomorphic mapping
@@ -686,13 +686,13 @@ almost every bug in this area:
   (`length-constrained-array-ops.mts`), which recovers the bounds, applies the
   operation's effect on them and rebuilds the constraint.
 
-#### Brand _and_ tuple at once
+#### Brand *and* tuple at once
 
 A value routinely carries **both** a brand and an exact tuple:
 `Arr.isMinLengthArray(3, xs)` in ts-data-forge narrows a five-tuple to
 `MinLengthArray<3, E> & readonly [a, b, c, d, e]`, because those guards
 intersect the brand onto the caller's own type on purpose. (ts-fortress does
-_not_ produce this shape — its combinators return a pure
+*not* produce this shape — its combinators return a pure
 `Type<MinLengthArray<N, A>>`.)
 
 When both are present the **structural part wins**: it pins the length exactly
@@ -711,8 +711,8 @@ Extract the brand structurally rather than naming the internal marker key:
 
 ```ts
 type LengthConstraintKeysOf<Ar extends readonly unknown[]> = Exclude<
-    keyof Ar,
-    keyof (readonly unknown[]) | `${number}`
+  keyof Ar,
+  keyof (readonly unknown[]) | `${number}`
 >;
 ```
 
@@ -732,20 +732,18 @@ rather than assuming the tuple form.
 
 - **Never count with recursion when a tuple splice will do.** `MakeTuple`
   builds a tuple of length `N` by digit-wise tiling, so addition, saturating
-  subtraction and minimum are each a _single_ variadic-tuple match against
+  subtraction and minimum are each a *single* variadic-tuple match against
   it, independent of the size of the bound:
 
     ```ts
     type LengthTuple<N> = MakeTuple<0, N & number>;
     type AddLength<A, B> = [...LengthTuple<A>, ...LengthTuple<B>]['length'];
     type SubLength<A, B> =
-        LengthTuple<A> extends readonly [...LengthTuple<B>, ...infer Rest]
-            ? Rest['length']
-            : 0; // saturates
+      LengthTuple<A> extends readonly [...LengthTuple<B>, ...infer Rest]
+        ? Rest['length']
+        : 0; // saturates
     type SmallerLength<A, B> =
-        LengthTuple<A> extends readonly [...LengthTuple<B>, ...unknown[]]
-            ? B
-            : A;
+      LengthTuple<A> extends readonly [...LengthTuple<B>, ...unknown[]] ? B : A;
     ```
 
     A per-unit `[...Counter, 0]` walk gives the same answers but costs one
@@ -759,11 +757,11 @@ rather than assuming the tuple form.
   operation family can land inside measurement noise.
 
 - **TS2589 spills across files.** Pushing a signature over the
-  instantiation-depth limit surfaces the error in _unrelated_ modules that
+  instantiation-depth limit surfaces the error in *unrelated* modules that
   merely consume it, so a sudden failure far from the edit is a signal to
   look at the type you just widened, not at the file that reported it.
 
-- **Know which bounds are worth carrying.** A _lower_ bound or an _exact_
+- **Know which bounds are worth carrying.** A *lower* bound or an *exact*
   length unlocks indexed access without `undefined`, so it pays for itself. An
   upper-only bound unlocks nothing for callers while still forcing an
   annotation at every comparison site — and, in practice, was what blew the
@@ -806,7 +804,7 @@ errors in them).
     6. `pnpm run check:root` if you touched the root `scripts/` or `configs/`
 - **The codemod must run before the doc embeds.** `codemod:full`
   (`append-as-const` / `convert-to-readonly`) rewrites files under
-  `samples/`, so running it _after_ an embed leaves the copy inside the JSDoc
+  `samples/`, so running it *after* an embed leaves the copy inside the JSDoc
   block stale — which fails CI's `lint-and-build (ws:build)` and
   `style-check (ws:doc)` while everything passes locally. This bites whenever
   a task adds **new** sample files.
