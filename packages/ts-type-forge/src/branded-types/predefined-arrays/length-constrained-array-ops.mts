@@ -147,7 +147,9 @@ export namespace ConstrainedList {
    */
   export type Take<N extends SupportedLength, Ar extends readonly unknown[]> =
     HasLengthConstraint<Ar> extends true
-      ? CappedAt<Ar, N> & TakeStructure<N, Ar>
+      ? N extends SupportedLength // distribute once; see the note below
+        ? CappedAt<Ar, N> & TakeStructure<N, Ar>
+        : never
       : List.Take<N, Ar>;
 
   /**
@@ -162,7 +164,9 @@ export namespace ConstrainedList {
     Ar extends readonly unknown[],
   > =
     HasLengthConstraint<Ar> extends true
-      ? CappedAt<Ar, N> & TakeLastStructure<N, Ar>
+      ? N extends SupportedLength // distribute once; see the note below
+        ? CappedAt<Ar, N> & TakeLastStructure<N, Ar>
+        : never
       : List.TakeLast<N, Ar>;
 
   /**
@@ -174,7 +178,9 @@ export namespace ConstrainedList {
    */
   export type Skip<N extends SupportedLength, Ar extends readonly unknown[]> =
     HasLengthConstraint<Ar> extends true
-      ? ShrunkBy<Ar, N> & SkipStructure<N, Ar>
+      ? N extends SupportedLength // distribute once; see the note below
+        ? ShrunkBy<Ar, N> & SkipStructure<N, Ar>
+        : never
       : List.Skip<N, Ar>;
 
   /**
@@ -189,7 +195,9 @@ export namespace ConstrainedList {
     Ar extends readonly unknown[],
   > =
     HasLengthConstraint<Ar> extends true
-      ? ShrunkBy<Ar, N> & SkipLastStructure<N, Ar>
+      ? N extends SupportedLength // distribute once; see the note below
+        ? ShrunkBy<Ar, N> & SkipLastStructure<N, Ar>
+        : never
       : List.SkipLast<N, Ar>;
 
   /**
@@ -280,9 +288,31 @@ export namespace ConstrainedList {
     Ar extends readonly unknown[],
   > =
     HasLengthConstraint<Ar> extends true
-      ? readonly BoundedLengthArray<1, N, Ar[number]>[] &
-          PartitionStructure<N, Ar>
+      ? N extends SupportedLength // distribute once; see the note below
+        ? readonly BoundedLengthArray<1, N, Ar[number]>[] &
+            PartitionStructure<N, Ar>
+        : never
       : List.Partition<N, Ar>;
+
+  /*
+   * Why the counting members distribute over `N` explicitly.
+   *
+   * Each of them uses `N` in two independent places — the bound arithmetic and
+   * the structural rebuild — and both distribute over a union on their own. Let
+   * them do it separately and the result is the *cross product* of the two:
+   *
+   *   ConstrainedList.Take<1 | 2, MinLengthArray<3, number>>
+   *   // was: FixedLengthArray<1, number>
+   *   //    | BoundedLengthArray<2, 1, number>   <- min above max, uninhabited
+   *   //    | BoundedLengthArray<1, 2, number>
+   *   //    | FixedLengthArray<2, number>
+   *
+   * The stray members are uninhabited rather than wrong, so the union as a
+   * whole stays sound — it collapses to `BoundedLengthArray<1, 2, number>` —
+   * but it is noise, and it grows as the square of the union. Distributing once
+   * at the top instead pins `N` to a single length for every use inside, so
+   * each member of the answer is the answer for one length.
+   */
 
   /*
    * `Flatten` has deliberately no counterpart here. Unlike the members above it

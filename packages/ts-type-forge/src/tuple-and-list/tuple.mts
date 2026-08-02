@@ -1,3 +1,4 @@
+import { type IsUnion } from '../condition/index.mjs';
 import { type NonEmptyTuple } from './array.mjs';
 
 export namespace Tuple {
@@ -103,12 +104,17 @@ export namespace Tuple {
    * type TK1 = Tuple.Take<2, [1, 2, 3]>; // readonly [1, 2]
    * type TK2 = Tuple.Take<5, [1, 2, 3]>; // readonly [1, 2, 3]
    * type TK3 = Tuple.Take<0, [1, 2, 3]>; // readonly []
+   * type TK4 = Tuple.Take<1 | 2, [1, 2, 3]>; // readonly [1] | readonly [1, 2]
+   * type TK5 = Tuple.Take<number, [1, 2, 3]>; // readonly (1 | 2 | 3)[]
    */
-  export type Take<N extends number, T extends readonly unknown[]> = TakeImpl<
-    N,
-    T,
-    readonly []
-  >;
+  export type Take<
+    N extends number,
+    T extends readonly unknown[],
+  > = number extends N
+    ? readonly T[number][]
+    : N extends number
+      ? TakeImpl<N, T, readonly []>
+      : never;
 
   /**
    * Skips the first `N` elements from a readonly tuple `T`.
@@ -119,12 +125,17 @@ export namespace Tuple {
    * type SK1 = Tuple.Skip<1, [1, 2, 3]>; // readonly [2, 3]
    * type SK2 = Tuple.Skip<3, [1, 2, 3]>; // readonly []
    * type SK3 = Tuple.Skip<0, [1, 2, 3]>; // readonly [1, 2, 3]
+   * type SK4 = Tuple.Skip<1 | 2, [1, 2, 3]>; // readonly [2, 3] | readonly [3]
+   * type SK5 = Tuple.Skip<number, [1, 2, 3]>; // readonly (1 | 2 | 3)[]
    */
-  export type Skip<N extends number, T extends readonly unknown[]> = SkipImpl<
-    N,
-    T,
-    readonly []
-  >;
+  export type Skip<
+    N extends number,
+    T extends readonly unknown[],
+  > = number extends N
+    ? readonly T[number][]
+    : N extends number
+      ? SkipImpl<N, T, readonly []>
+      : never;
 
   /**
    * Takes the last `N` elements from a readonly tuple `T`.
@@ -135,11 +146,17 @@ export namespace Tuple {
    * type TL1 = Tuple.TakeLast<2, [1, 2, 3]>; // readonly [2, 3]
    * type TL2 = Tuple.TakeLast<5, [1, 2, 3]>; // readonly [1, 2, 3]
    * type TL3 = Tuple.TakeLast<0, [1, 2, 3]>; // readonly []
+   * type TL4 = Tuple.TakeLast<1 | 2, [1, 2, 3]>; // readonly [3] | readonly [2, 3]
+   * type TL5 = Tuple.TakeLast<number, [1, 2, 3]>; // readonly (1 | 2 | 3)[]
    */
   export type TakeLast<
     N extends number,
     T extends readonly unknown[],
-  > = TakeLastImpl<N, T, readonly []>;
+  > = number extends N
+    ? readonly T[number][]
+    : N extends number
+      ? TakeLastImpl<N, T, readonly []>
+      : never;
 
   /**
    * Skips the last `N` elements from a readonly tuple `T`.
@@ -150,27 +167,41 @@ export namespace Tuple {
    * type SL1 = Tuple.SkipLast<1, [1, 2, 3]>; // readonly [1, 2]
    * type SL2 = Tuple.SkipLast<3, [1, 2, 3]>; // readonly []
    * type SL3 = Tuple.SkipLast<0, [1, 2, 3]>; // readonly [1, 2, 3]
+   * type SL4 = Tuple.SkipLast<1 | 2, [1, 2, 3]>; // readonly [1, 2] | readonly [1]
+   * type SL5 = Tuple.SkipLast<number, [1, 2, 3]>; // readonly (1 | 2 | 3)[]
    */
   export type SkipLast<
     N extends number,
     T extends readonly unknown[],
-  > = SkipLastImpl<N, T, readonly []>;
+  > = number extends N
+    ? readonly T[number][]
+    : N extends number
+      ? SkipLastImpl<N, T, readonly []>
+      : never;
 
   /**
    * Creates a new readonly tuple type where the element at index `I` in `T` is replaced with type `V`.
+   *
+   * When `I` is a single numeric literal it names one position, and only that
+   * position changes. When `I` is a union — or `number`, which names no
+   * position in particular — the call replaces *one* of the candidate positions
+   * and never all of them, so each candidate is widened to `T[I] | V` rather
+   * than set to `V` outright.
    * @template I - The index to update (must be a valid index literal for `T`).
    * @template V - The new type for the element at index `I`.
    * @template T - The readonly tuple type.
    * @returns A new readonly tuple type with the element at index `I` updated.
    * @example
    * type SA1 = Tuple.SetAt<1, 'x', [1, 2, 3]>; // readonly [1, 'x', 3]
-   * // type SA2 = Tuple.SetAt<2, 'x', [1, 2]>; // Error: Index '2' is out of bounds.
+   * type SA2 = Tuple.SetAt<0 | 2, 'x', [1, 2, 3]>; // readonly [1 | 'x', 2, 3 | 'x']
+   * type SA3 = Tuple.SetAt<number, 'x', [1, 2, 3]>; // readonly [1 | 'x', 2 | 'x', 3 | 'x']
+   * // type SA4 = Tuple.SetAt<2, 'x', [1, 2]>; // Error: Index '2' is out of bounds.
    */
   export type SetAt<
     I extends number,
     V,
     T extends readonly unknown[],
-  > = SetAtImpl<T, I, V, readonly []>;
+  > = SetAtImpl<T, I, V, readonly [], PinsOneIndex<I>>;
 
   /**
    * Flattens a nested readonly tuple `T` by one level.
@@ -245,12 +276,46 @@ export namespace Tuple {
    * type P2 = Tuple.Partition<3, [1, 2, 3, 4, 5, 6]>; // readonly [readonly [1, 2, 3], readonly [4, 5, 6]]
    * type P3 = Tuple.Partition<1, [1, 2]>; // readonly [readonly [1], readonly [2]]
    * type P4 = Tuple.Partition<5, [1, 2]>; // readonly [readonly [1, 2]]
+   * type P5 = Tuple.Partition<number, [1, 2]>; // readonly (readonly (1 | 2)[])[]
    */
   export type Partition<
     N extends number,
     T extends readonly unknown[],
-  > = PartitionImpl<N, T, readonly [], readonly []>;
+  > = number extends N
+    ? readonly (readonly T[number][])[]
+    : N extends number
+      ? PartitionImpl<N, T, readonly [], readonly []>
+      : never;
 }
+
+/*
+ * A union-valued length or index argument.
+ *
+ * Every operation above that counts — `Take`, `Skip`, `TakeLast`, `SkipLast`,
+ * `Partition` — walks a counter tuple up to `N` and stops at the first match.
+ * A union `N` matches at *every* member of it, so the walk stops at the
+ * smallest one and the result silently describes that call alone:
+ * `Take<1 | 2, [1, 2, 3]>` came out as `readonly [1]`, which the equally
+ * possible `[1, 2]` does not satisfy. `number` is worse still — it matches at
+ * length zero, so `Take<number, T>` came out as `readonly []`.
+ *
+ * They are fixed the same way: distribute over `N` so a union answers with the
+ * union of the per-length results, and fall back to an unsized `readonly E[]`
+ * for `number` (and `any`), which pins no length and so admits every prefix or
+ * suffix the call might return.
+ *
+ * `SetAt` deliberately does *not* distribute. Its result is one tuple of a
+ * fixed length whichever index is chosen, so widening the candidate positions
+ * in place stays exact where it matters — indexed access into
+ * `readonly [1 | 'x', 2, 3 | 'x']` answers exactly what the distributed
+ * `readonly ['x', 2, 3] | readonly [1, 2, 'x']` would — at a fraction of the
+ * cost. The distinction matters because an index union is the *common* case
+ * there: it is what indexing a tuple by a non-literal produces, so distributing
+ * would turn every such call into `|indices|` copies of the whole tuple.
+ *
+ * `MakeTuple` needs no equivalent: it walks the decimal digits of `${N}`, and
+ * that walk distributes over a union on its own.
+ */
 
 /**
  * @internal Recursive implementation for `Tuple.Reverse`.
@@ -336,25 +401,55 @@ type SkipLastImpl<
   : SkipLastImpl<N, T, readonly [unknown, ...R]>;
 
 /**
+ * @internal Whether `I` names exactly one position.
+ *
+ * A union does not: `0 | 2` marks two *candidate* positions, of which a call
+ * updates one and never both. Nor does `number` (or `any`, which absorbs the
+ * check), which marks every position as a candidate. Only for a single literal
+ * is the position that changes statically known.
+ */
+type PinsOneIndex<I extends number> =
+  IsUnion<I> extends true ? false : number extends I ? false : true;
+
+/**
  * @internal Recursive implementation for `Tuple.SetAt`.
+ *
+ * `ACC['length'] extends I` asks whether the current position is *a* candidate,
+ * which for a union `I` is true at every member of it at once. Replacing each
+ * of them with `V` would describe a result no single call can produce —
+ * `SetAt<0 | 2, 'x', [1, 2, 3]>` as `['x', 2, 'x']` is satisfied by neither
+ * `['x', 2, 3]` nor `[1, 2, 'x']`. So a candidate position is only *set* when
+ * `I` pins it alone, and otherwise *widened* to `T[I] | V`, which every
+ * possible result does satisfy.
  * @template T - The remaining part of the input tuple.
  * @template I - The target index.
  * @template V - The value to set.
  * @template ACC - The accumulator tuple (reversed processed elements).
+ * @template Exact - Whether `I` names exactly one position; see {@link PinsOneIndex}.
  */
 type SetAtImpl<
   T extends readonly unknown[],
   I extends number,
   V,
   ACC extends readonly unknown[],
+  Exact extends boolean,
 > = {
   end: Tuple.Reverse<ACC>; // Base case: T is empty, return reversed accumulator
-  next: SetAtImpl<Tuple.Tail<T>, I, V, readonly [Tuple.Head<T>, ...ACC]>; // Recursive step: index not reached, add Head<T> to accumulator
-  setValue: SetAtImpl<Tuple.Tail<T>, I, V, readonly [V, ...ACC]>; // Recursive step: index reached, add V to accumulator
+  next: SetAtImpl<Tuple.Tail<T>, I, V, readonly [Tuple.Head<T>, ...ACC], Exact>; // Recursive step: not a candidate, add Head<T> to accumulator
+  setValue: SetAtImpl<Tuple.Tail<T>, I, V, readonly [V, ...ACC], Exact>; // Recursive step: the one index, add V to accumulator
+  widen: SetAtImpl<
+    Tuple.Tail<T>,
+    I,
+    V,
+    readonly [Tuple.Head<T> | V, ...ACC],
+    Exact
+  >; // Recursive step: one candidate of several, add Head<T> | V to accumulator
 }[T extends readonly []
   ? 'end'
   : ACC['length'] extends I
-    ? 'setValue'
+    ? Exact extends true
+      ? 'setValue'
+      : 'widen'
     : 'next'];
 
 /**

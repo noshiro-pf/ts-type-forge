@@ -587,3 +587,48 @@ export type ListPartitionOfBranded = List.Partition<2, BrandedFiveTuple>;
 
 // @ts-expect-error TS2589: Type instantiation is excessively deep.
 export type TupleReverseOfBranded = Tuple.Reverse<BrandedFiveTuple>;
+
+/* Union and non-literal length / index arguments.
+ *
+ * A union names several candidate lengths (or indices), of which a call takes
+ * exactly one. `SetAt` widens the candidate positions in place; the counting
+ * members distribute, once, so that the bound arithmetic and the structural
+ * rebuild agree on which length they are describing. */
+
+expectType<
+  ConstrainedList.SetAt<0 | 2, 'x', MinLengthArray<3, number>>,
+  MinLengthArray<3, number | 'x'>
+>('~=');
+
+expectType<
+  ConstrainedList.SetAt<0 | 2, 'x', readonly [1, 2, 3]>,
+  readonly [1 | 'x', 2, 3 | 'x']
+>('=');
+
+expectType<
+  ConstrainedList.SetAt<0 | 2, 'x', BrandedFiveTuple>,
+  MinLengthArray<3, Elm5 | 'x'> & readonly [1 | 'x', 2, 3 | 'x', 4, 5]
+>('~=');
+
+expectType<
+  ConstrainedList.SetAt<number, 'x', BrandedFiveTuple>,
+  MinLengthArray<3, Elm5 | 'x'> &
+    readonly [1 | 'x', 2 | 'x', 3 | 'x', 4 | 'x', 5 | 'x']
+>('~=');
+
+// Exactly `Take<1> | Take<2>` — no cross product between the two uses of `N`.
+expectType<
+  ConstrainedList.Take<1 | 2, MinLengthArray<3, number>>,
+  FixedLengthArray<1, number> | FixedLengthArray<2, number>
+>('~=');
+
+expectType<
+  ConstrainedList.Skip<1 | 2, MinLengthArray<3, number>>,
+  MinLengthArray<2, number> | MinLengthArray<1, number>
+>('~=');
+
+expectType<
+  ConstrainedList.Take<1 | 2, BrandedFiveTuple>,
+  | (FixedLengthArray<1, Elm5> & readonly [1])
+  | (FixedLengthArray<2, Elm5> & readonly [1, 2])
+>('~=');
