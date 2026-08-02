@@ -97,7 +97,9 @@ export namespace Tuple {
 
   /**
    * Takes the first `N` elements from a readonly tuple `T`.
-   * @template N - The number of elements to take (must be a non-negative integer literal).
+   * @template N - The number of elements to take. A union of literals answers
+   * with the union of the per-length results; `number` pins no length and
+   * answers an unsized array.
    * @template T - The readonly tuple type.
    * @returns A new readonly tuple type containing the first `N` elements. If `N` is larger than the length of `T`, returns `T`.
    * @example
@@ -118,7 +120,9 @@ export namespace Tuple {
 
   /**
    * Skips the first `N` elements from a readonly tuple `T`.
-   * @template N - The number of elements to skip (must be a non-negative integer literal).
+   * @template N - The number of elements to skip. A union of literals answers
+   * with the union of the per-length results; `number` pins no length and
+   * answers an unsized array.
    * @template T - The readonly tuple type.
    * @returns A new readonly tuple type containing the elements after the first `N`. If `N` is larger than the length of `T`, returns `readonly []`.
    * @example
@@ -139,7 +143,9 @@ export namespace Tuple {
 
   /**
    * Takes the last `N` elements from a readonly tuple `T`.
-   * @template N - The number of elements to take (must be a non-negative integer literal).
+   * @template N - The number of elements to take. A union of literals answers
+   * with the union of the per-length results; `number` pins no length and
+   * answers an unsized array.
    * @template T - The readonly tuple type.
    * @returns A new readonly tuple type containing the last `N` elements. If `N` is larger than the length of `T`, returns `T`.
    * @example
@@ -160,7 +166,9 @@ export namespace Tuple {
 
   /**
    * Skips the last `N` elements from a readonly tuple `T`.
-   * @template N - The number of elements to skip (must be a non-negative integer literal).
+   * @template N - The number of elements to skip. A union of literals answers
+   * with the union of the per-length results; `number` pins no length and
+   * answers an unsized array.
    * @template T - The readonly tuple type.
    * @returns A new readonly tuple type containing the elements before the last `N`. If `N` is larger than the length of `T`, returns `readonly []`.
    * @example
@@ -187,7 +195,9 @@ export namespace Tuple {
    * position in particular — the call replaces *one* of the candidate positions
    * and never all of them, so each candidate is widened to `T[I] | V` rather
    * than set to `V` outright.
-   * @template I - The index to update (must be a valid index literal for `T`).
+   * @template I - The index to update. A single literal names one position
+   * exactly; a union of literals, or `number`, widens every candidate position
+   * instead. An index beyond the end of `T` leaves it unchanged.
    * @template V - The new type for the element at index `I`.
    * @template T - The readonly tuple type.
    * @returns A new readonly tuple type with the element at index `I` updated.
@@ -195,7 +205,7 @@ export namespace Tuple {
    * type SA1 = Tuple.SetAt<1, 'x', [1, 2, 3]>; // readonly [1, 'x', 3]
    * type SA2 = Tuple.SetAt<0 | 2, 'x', [1, 2, 3]>; // readonly [1 | 'x', 2, 3 | 'x']
    * type SA3 = Tuple.SetAt<number, 'x', [1, 2, 3]>; // readonly [1 | 'x', 2 | 'x', 3 | 'x']
-   * // type SA4 = Tuple.SetAt<2, 'x', [1, 2]>; // Error: Index '2' is out of bounds.
+   * type SA4 = Tuple.SetAt<2, 'x', [1, 2]>; // readonly [1, 2] (index out of bounds: unchanged)
    */
   export type SetAt<
     I extends number,
@@ -268,7 +278,10 @@ export namespace Tuple {
   /**
    * Partitions a readonly tuple `T` into sub-tuples of length `N`.
    * The last sub-tuple may have fewer than `N` elements if the length of `T` is not divisible by `N`.
-   * @template N - The desired size of each partition (must be a positive integer literal).
+   * @template N - The desired size of each partition. A union of literals
+   * answers with the union of the per-size results; `number` pins no size and
+   * answers an unsized array of unsized chunks. `0` is not a partition size
+   * and answers `never`.
    * @template T - The readonly tuple type to partition.
    * @returns A readonly tuple where each element is a sub-tuple of length up to `N`.
    * @example
@@ -284,7 +297,9 @@ export namespace Tuple {
   > = number extends N
     ? readonly (readonly T[number][])[]
     : N extends number
-      ? PartitionImpl<N, T, readonly [], readonly []>
+      ? [N] extends [0]
+        ? never // a chunk size of 0 consumes nothing; see the note below
+        : PartitionImpl<N, T, readonly [], readonly []>
       : never;
 }
 
@@ -315,6 +330,15 @@ export namespace Tuple {
  *
  * `MakeTuple` needs no equivalent: it walks the decimal digits of `${N}`, and
  * that walk distributes over a union on its own.
+ *
+ * `Partition` additionally rejects a chunk size of `0`. `PartitionImpl` closes
+ * the current chunk whenever it reaches `N` elements, so at `N = 0` it closes
+ * an empty chunk without ever consuming from `T` and recurses until the
+ * instantiation limit — `Tuple.Partition<0, [1, 2]>` was TS2589 rather than a
+ * type. There is no sensible answer to "split this into chunks of nothing", so
+ * it answers `never`. Distribution makes this reachable from a union that
+ * merely contains `0`, and `SupportedLength` (which bounds
+ * `ConstrainedList.Partition`) contains it.
  */
 
 /**

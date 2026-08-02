@@ -289,8 +289,10 @@ export namespace ConstrainedList {
   > =
     HasLengthConstraint<Ar> extends true
       ? N extends SupportedLength // distribute once; see the note below
-        ? readonly BoundedLengthArray<1, N, Ar[number]>[] &
-            PartitionStructure<N, Ar>
+        ? [N] extends [0]
+          ? never // no partition into chunks of nothing; see Tuple.Partition
+          : readonly BoundedLengthArray<1, N, Ar[number]>[] &
+              PartitionStructure<N, Ar>
         : never
       : List.Partition<N, Ar>;
 

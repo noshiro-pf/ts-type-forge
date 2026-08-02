@@ -68,5 +68,17 @@ that grew as the square of the union.
 `MakeTuple` needed no change: it walks the decimal digits of `` `${N}` ``, and
 that walk already distributes over a union on its own.
 
-Cost: **+9.5k instantiations, about 0.6%** (1,683,504 against a 1,673,973
+**`Partition` now rejects a chunk size of `0` instead of not terminating.**
+`PartitionImpl` closes the current chunk whenever it reaches `N` elements, so
+at `N = 0` it closed an empty chunk without ever consuming from the input and
+recursed until the instantiation limit — `Tuple.Partition<0, [1, 2]>` was
+`TS2589: Type instantiation is excessively deep and possibly infinite` rather
+than a type. It now answers `never`, there being no way to split anything into
+chunks of nothing. Distribution makes this reachable from a union that merely
+contains `0`, and `SupportedLength` — which bounds `ConstrainedList.Partition`
+— contains it. `ConstrainedList.Partition` carries its own guard because on a
+brand-only input there is no exact tuple to rebuild, so `Tuple.Partition`'s
+`never` would not reach it.
+
+Cost: **+9.7k instantiations, about 0.6%** (1,683,681 against a 1,673,973
 baseline), new tests included.

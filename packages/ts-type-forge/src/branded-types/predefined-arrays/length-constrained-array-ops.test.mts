@@ -632,3 +632,13 @@ expectType<
   | (FixedLengthArray<1, Elm5> & readonly [1])
   | (FixedLengthArray<2, Elm5> & readonly [1, 2])
 >('~=');
+
+// A chunk size of 0 has no answer. The brand-only path needs its own guard:
+// there is no exact tuple to rebuild, so `Tuple.Partition`'s `never` never
+// reaches it and the brand half would stand alone as an array of uninhabited
+// chunks.
+expectType<ConstrainedList.Partition<0, MinLengthArray<3, number>>, never>('=');
+
+expectType<ConstrainedList.Partition<0, BrandedFiveTuple>, never>('=');
+
+expectType<ConstrainedList.Partition<0, readonly [1, 2]>, never>('=');

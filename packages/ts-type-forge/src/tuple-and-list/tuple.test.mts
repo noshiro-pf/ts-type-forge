@@ -295,4 +295,13 @@ import { type Tuple } from './tuple.mjs';
     Tuple.Partition<number, readonly [1, 2]>,
     readonly (readonly (1 | 2)[])[]
   >('=');
+
+  // A chunk size of 0 consumes nothing, so it has no answer rather than a
+  // non-terminating one. Reachable from a union that merely contains 0.
+  expectType<Tuple.Partition<0, readonly [1, 2]>, never>('=');
+
+  expectType<
+    Tuple.Partition<0 | 2, readonly [1, 2]>,
+    readonly [readonly [1, 2]]
+  >('=');
 }
