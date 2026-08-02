@@ -245,31 +245,27 @@ import { type Tuple } from './tuple.mjs';
     '=',
   );
 
-  // the counting members distribute instead
-  expectType<
-    Tuple.Take<1 | 2, readonly [1, 2, 3]>,
-    readonly [1] | readonly [1, 2]
-  >('=');
+  // the counting members cannot widen in place — the candidates differ in
+  // length — so a union answers exactly as `number` does
+  expectType<Tuple.Take<1 | 2, readonly [1, 2, 3]>, readonly (1 | 2 | 3)[]>(
+    '=',
+  );
 
-  expectType<
-    Tuple.TakeLast<1 | 2, readonly [1, 2, 3]>,
-    readonly [3] | readonly [2, 3]
-  >('=');
+  expectType<Tuple.TakeLast<1 | 2, readonly [1, 2, 3]>, readonly (1 | 2 | 3)[]>(
+    '=',
+  );
 
-  expectType<
-    Tuple.Skip<1 | 2, readonly [1, 2, 3]>,
-    readonly [2, 3] | readonly [3]
-  >('=');
+  expectType<Tuple.Skip<1 | 2, readonly [1, 2, 3]>, readonly (1 | 2 | 3)[]>(
+    '=',
+  );
 
-  expectType<
-    Tuple.SkipLast<1 | 2, readonly [1, 2, 3]>,
-    readonly [1, 2] | readonly [1]
-  >('=');
+  expectType<Tuple.SkipLast<1 | 2, readonly [1, 2, 3]>, readonly (1 | 2 | 3)[]>(
+    '=',
+  );
 
   expectType<
     Tuple.Partition<1 | 2, readonly [1, 2, 3, 4]>,
-    | readonly [readonly [1], readonly [2], readonly [3], readonly [4]]
-    | readonly [readonly [1, 2], readonly [3, 4]]
+    readonly (readonly (1 | 2 | 3 | 4)[])[]
   >('=');
 
   // `number` pins no length at all, so no tuple result is safe to claim
@@ -302,6 +298,6 @@ import { type Tuple } from './tuple.mjs';
 
   expectType<
     Tuple.Partition<0 | 2, readonly [1, 2]>,
-    readonly [readonly [1, 2]]
+    readonly (readonly (1 | 2)[])[]
   >('=');
 }

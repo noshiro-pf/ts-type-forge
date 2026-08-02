@@ -380,15 +380,9 @@ import { type List } from './list.mjs';
     readonly (number | 'x')[]
   >('=');
 
-  expectType<
-    List.Take<1 | 2, readonly [1, 2, 3]>,
-    readonly [1] | readonly [1, 2]
-  >('=');
+  expectType<List.Take<1 | 2, readonly [1, 2, 3]>, readonly (1 | 2 | 3)[]>('=');
 
-  expectType<
-    List.Skip<1 | 2, readonly [1, 2, 3]>,
-    readonly [2, 3] | readonly [3]
-  >('=');
+  expectType<List.Skip<1 | 2, readonly [1, 2, 3]>, readonly (1 | 2 | 3)[]>('=');
 
   expectType<List.Take<1 | 2, readonly number[]>, readonly number[]>('=');
 

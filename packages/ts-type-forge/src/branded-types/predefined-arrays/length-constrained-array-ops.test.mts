@@ -616,22 +616,19 @@ expectType<
     readonly [1 | 'x', 2 | 'x', 3 | 'x', 4 | 'x', 5 | 'x']
 >('~=');
 
-// Exactly `Take<1> | Take<2>` — no cross product between the two uses of `N`.
+// A union of lengths pins none of them, so the brand is dropped rather than
+// folded across the union — the same answer `number` would give.
 expectType<
   ConstrainedList.Take<1 | 2, MinLengthArray<3, number>>,
-  FixedLengthArray<1, number> | FixedLengthArray<2, number>
->('~=');
+  readonly number[]
+>('=');
 
 expectType<
   ConstrainedList.Skip<1 | 2, MinLengthArray<3, number>>,
-  MinLengthArray<2, number> | MinLengthArray<1, number>
->('~=');
+  readonly number[]
+>('=');
 
-expectType<
-  ConstrainedList.Take<1 | 2, BrandedFiveTuple>,
-  | (FixedLengthArray<1, Elm5> & readonly [1])
-  | (FixedLengthArray<2, Elm5> & readonly [1, 2])
->('~=');
+expectType<ConstrainedList.Take<1 | 2, BrandedFiveTuple>, readonly Elm5[]>('=');
 
 // A chunk size of 0 has no answer. The brand-only path needs its own guard:
 // there is no exact tuple to rebuild, so `Tuple.Partition`'s `never` never
