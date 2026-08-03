@@ -8,11 +8,6 @@
       "actor_id": 5,
       "actor_type": "RepositoryRole",
       "bypass_mode": "always"
-    },
-    {
-      "actor_id": 1442563,
-      "actor_type": "Integration",
-      "bypass_mode": "always"
     }
   ],
   "conditions": {
@@ -91,6 +86,10 @@
           },
           {
             "context": "test-node-versions (26.3.1)",
+            "integration_id": 15368
+          },
+          {
+            "context": "backup-repository-settings",
             "integration_id": 15368
           }
         ]
