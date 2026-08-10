@@ -1,3 +1,11 @@
+> [!IMPORTANT]
+>
+> **This repository has moved to [noshiro-pf/mono](https://github.com/noshiro-pf/mono).**
+>
+> Development continues at [`libs/ts-type-forge`](https://github.com/noshiro-pf/mono/tree/main/libs/ts-type-forge), [`libs/eslint-plugin-ts-type-forge`](https://github.com/noshiro-pf/mono/tree/main/libs/eslint-plugin-ts-type-forge).
+> The full commit history and every tag came along; releases and issues stay
+> readable here.
+
 # ts-type-forge monorepo
 
 This repository is a pnpm workspace containing the `ts-type-forge` type-level
